@@ -1,36 +1,63 @@
-import { Card, CardBody, CardHeader, Select, Text } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, CardHeader, Input, Select, Text } from "@chakra-ui/react";
+import { useState } from "react";
+import { searchByCriteria } from "../services";
+import { useMedinceStore } from "../store";
 
 
 const searches = [
     {
-        value: "brand",
+        value: "brand_name",
         title: "Brand"
     },
     {
-        value: "company",
+        value: "company_name",
         title: "Company"
     },
     {
-        value: "generics",
+        value: "formulation",
         title: "Generics"
     }
 ];
 
 
 const SearchBy = () => {
+    const [findBy, setFindBy] = useState('');
+    const [searchText, setSearchText] = useState('');
+    const loadMedicines = useMedinceStore((store) => store.loadMedicines);
+
+    const findMedicine = async () => {
+        try {
+            const response = await searchByCriteria(findBy, searchText);
+            loadMedicines(response.data,response.search);
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
     return (
-        <Card height={120}>
-        <CardHeader py={3}>
-            <Text fontWeight={"bold"} fontSize={"xl"}>Search By:</Text>
-        </CardHeader>
-        <CardBody py={3}>
-            <Select placeholder="Search...">
-                {searches.map((search) => (
-                    <option key={search.value} value={search.value}>{search.title}</option>
-                ))}
-            </Select>
-        </CardBody>
-    </Card>
+        <Card height={140}>
+            <CardHeader py={2}>
+                <Text fontWeight={"bold"} fontSize={"md"}>Search By:</Text>
+            </CardHeader>
+            <CardBody py={0}>
+                <Select
+                    onChange={(e) => setFindBy(e.target.value)}
+                    placeholder="Search..."
+                >
+                    {searches.map((search) => (
+                        <option key={search.value} value={search.value}>{search.title}</option>
+                    ))}
+                </Select>
+
+                <Box display={"flex"} gap={"2"} marginTop={"2"}>
+                    <Input
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                    />
+                    <Button onClick={findMedicine}>Search</Button>
+                </Box>
+            </CardBody>
+        </Card>
     )
 }
 export default SearchBy;

@@ -11,7 +11,7 @@ const Layout = () => {
                 "header header"
                  "search main"
             `}
-            gridTemplateRows={'75px 1fr'}
+            gridTemplateRows={'60px 1fr'}
             gridTemplateColumns={".4fr 1fr"}
             height={'100vh'}
             gap={1}
@@ -20,10 +20,10 @@ const Layout = () => {
             <GridItem area={"header"}>
                 <Header/>
             </GridItem>
-            <GridItem p={5} area={"search"}>
+            <GridItem p={5} pt={2} area={"search"}>
                 <SearchSide/>
             </GridItem>
-            <GridItem height={"full"} px={3} area={'main'}>
+            <GridItem overflowX={"auto"} height={"full"} maxWidth={"full"} px={3} area={'main'}>
                 <MedicinesTable/>
             </GridItem>
         </Grid>

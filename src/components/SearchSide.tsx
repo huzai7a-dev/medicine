@@ -1,12 +1,12 @@
 import SearchBy from "./SearchBy";
-import InputPrescription from "./SearchPrescription";
+import SearchPrescription from "./SearchPrescription";
 import { Stack } from "@chakra-ui/react";
 
 const SearchSide = () => {
     return (
         <Stack>
             <SearchBy />
-            <InputPrescription/>
+            <SearchPrescription/>
         </Stack>
     )
 }
