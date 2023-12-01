@@ -1,47 +1,72 @@
-import { Box, Image, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Image, Input, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { AiFillCamera } from 'react-icons/ai';
+import { AiFillCamera } from "react-icons/ai";
+import { uploadPrescription } from "../services";
+import { useMedicineGroups } from "../store";
+import { useNavigate } from "react-router-dom";
 const UploadPrescription = () => {
-    const [image, setImage] = useState<File | undefined>();
+  const [image, setImage] = useState<File | undefined>();
+  const navigate = useNavigate();
+  const [loading,setLoading] = useState(false);
 
-    return (
-        <>
-            <Box
-                width={"100%"}
-                height={"150px"}
-                display={"flex"}
-                flexDirection={"column"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                shadow={"base"}
-                cursor={"pointer"}
-                position={"relative"}
-            >
-                {image ? (
-                    <Image
-                        src={URL.createObjectURL(image)}
-                        width={"100%"}
-                        maxHeight={"100%"}
-                        height={"auto"}
-                        objectFit={"fill"}
-                    />
-                ) : (
-                    <>
-                        <AiFillCamera size={30} />
-                        <Text fontWeight={"thin"}>Upload Prescription Image</Text>
-                        <Input
-                            height={"100%"}
-                            type="file"
-                            opacity={0}
-                            position={"absolute"}
-                            cursor={"pointer"}
-                            onChange={(e) => setImage(e.target.files && e?.target?.files[0] || undefined)}
-                        />
-                    </>
-                )}
-            </Box>
-        </>
-    )
-}
+    const {loadGroup} = useMedicineGroups((store)=> ({loadGroup:store.loadGroups}));
+
+  const handleSearch = async()=> {
+    try {
+        if(image) {
+            setLoading(true);
+            const response = await uploadPrescription(image);
+            loadGroup(response);
+            navigate('/search-prescription');
+        }
+    } catch (error) {
+        console.log(error)
+    }finally {
+        setLoading(false);
+    }
+  }
+  return (
+    <div>
+      <Box
+        width={"100%"}
+        height={"150px"}
+        display={"flex"}
+        flexDirection={"column"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        shadow={"base"}
+        cursor={"pointer"}
+        position={"relative"}
+      >
+        {image ? (
+          <Image
+            src={URL.createObjectURL(image)}
+            width={"100%"}
+            maxHeight={"100%"}
+            height={"auto"}
+            objectFit={"fill"}
+          />
+        ) : (
+          <>
+            <AiFillCamera size={30} />
+            <Text fontWeight={"thin"}>Upload Prescription Image</Text>
+            <Input
+              height={"100%"}
+              type="file"
+              opacity={0}
+              position={"absolute"}
+              cursor={"pointer"}
+              onChange={(e) =>
+                setImage((e.target.files && e?.target?.files[0]) || undefined)
+              }
+            />
+          </>
+        )}
+
+      </Box>
+      <Button width={"full"} marginTop={4} onClick={handleSearch}>Upload</Button>
+    </div>
+  );
+};
 
 export default UploadPrescription;

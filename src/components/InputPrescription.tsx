@@ -1,81 +1,90 @@
 import { DeleteIcon } from "@chakra-ui/icons";
-import { Box, Button, CardBody, HStack, IconButton, Input } from "@chakra-ui/react"
-import { forwardRef, useImperativeHandle, useState } from "react";
-import { searchPriscription } from "../services";
+import {
+  Box,
+  Button,
+  CardBody,
+  HStack,
+  IconButton,
+  Input,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { searchPrescription } from "../services";
+import { useNavigate } from "react-router-dom";
+import { useMedicineGroups } from "../store";
 
 interface InputField {
-    id: number;
-    value: string;
+  id: number;
+  value: string;
 }
 
-export interface InputPrescriptionRef {
-    searchiPrescription: () => void;
-}
+const InputPrescription = () => {
+  const [inputs, setInputs] = useState<InputField[]>([{ id: 1, value: "" }]);
+  const loadGroups = useMedicineGroups((state) => state.loadGroups);
+  const navigate = useNavigate();
 
-const InputPrescription = forwardRef<InputPrescriptionRef>((props,ref) => {
-    const [inputs, setInputs] = useState<InputField[]>([{ id: 1, value: '' }]);
+  const handleSearch = async () => {
+    try {
+      const data = await searchPrescription(getInputValues());
 
-    useImperativeHandle(ref, () => ({
-        async searchiPrescription() {
-            try {
-                const res = await searchPriscription(getInputValues());
-                console.log(res);
-            } catch (error) {
-                console.log(error)
-            }
-        }
-    }));
-
-    const handleInputChange = (id:number, newValue:string) => {
-        setInputs(inputs => inputs.map(input => 
-            input.id === id ? { ...input, value: newValue } : input
-        ));
-    };
-
-    const addInput = () => {
-        const newId = inputs.length > 0 ? inputs[inputs.length - 1].id + 1 : 1;
-        setInputs([...inputs, { id: newId, value: '' }]);
+      navigate("/search-prescription");
+      loadGroups(data);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    const removeInput = (id:number) => {
-        setInputs(inputs => inputs.filter(input => input.id !== id));
-    }
+  const handleInputChange = (id: number, newValue: string) => {
+    setInputs((inputs) =>
+      inputs.map((input) =>
+        input.id === id ? { ...input, value: newValue } : input
+      )
+    );
+  };
 
-     const getInputValues = () => {
-         return inputs.map(input => input.value);
-     }
+  const addInput = () => {
+    const newId = inputs.length > 0 ? inputs[inputs.length - 1].id + 1 : 1;
+    setInputs([...inputs, { id: newId, value: "" }]);
+  };
 
-    return (
-        <Box position={"relative"}>
-            <CardBody py={3}>
-                {inputs.map(({ id, value }) => (
-                    <HStack key={id}>
-                        <Input 
-                            marginY={2} 
-                            value={value}
-                            onChange={(e) => handleInputChange(id, e.target.value)}
-                        />
-                        {id > 1 && (
-                            <IconButton
-                                colorScheme='red'
-                                aria-label='Remove input'
-                                icon={<DeleteIcon />}
-                                onClick={() => removeInput(id)}
-                            />
-                        )}
-                    </HStack>
-                ))}
-                <Button
-                    width={"full"}
-                    mb={10}
-                    mt={2}
-                    onClick={addInput}
-                >
-                    Add
-                </Button>
-            </CardBody>
-        </Box>
-    )
-})
+  const removeInput = (id: number) => {
+    setInputs((inputs) => inputs.filter((input) => input.id !== id));
+  };
+
+  const getInputValues = () => {
+    return inputs.map((input) => input.value);
+  };
+
+  return (
+    <Box position={"relative"}>
+      <CardBody py={3}>
+        {inputs.map(({ id, value }) => (
+          <HStack key={id}>
+            <Input
+              marginY={2}
+              value={value}
+              onChange={(e) => handleInputChange(id, e.target.value)}
+            />
+            {id > 1 && (
+              <IconButton
+                colorScheme="red"
+                aria-label="Remove input"
+                icon={<DeleteIcon />}
+                onClick={() => removeInput(id)}
+              />
+            )}
+          </HStack>
+        ))}
+      </CardBody>
+      <Box display={"flex"} gap={5} position={"sticky"} px={3} width={"full"}>
+        <Button width={"full"} onClick={addInput}>
+          Add
+        </Button>
+        <Button width={"full"} onClick={handleSearch}>
+          Search
+        </Button>
+      </Box>
+    </Box>
+  );
+};
 
 export default InputPrescription;

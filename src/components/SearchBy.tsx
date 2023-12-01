@@ -1,7 +1,8 @@
 import { Box, Button, Card, CardBody, CardHeader, Input, Select, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { searchByCriteria } from "../services";
-import { useMedinceStore } from "../store";
+import { useMedicineStore } from "../store";
+import { useNavigate } from "react-router-dom";
 
 
 const searches = [
@@ -23,12 +24,14 @@ const searches = [
 const SearchBy = () => {
     const [findBy, setFindBy] = useState('');
     const [searchText, setSearchText] = useState('');
-    const loadMedicines = useMedinceStore((store) => store.loadMedicines);
+    const loadMedicines = useMedicineStore((store) => store.loadMedicines);
+    const navigate = useNavigate();
 
     const findMedicine = async () => {
         try {
             const response = await searchByCriteria(findBy, searchText);
             loadMedicines(response.data,response.search);
+            navigate('/search-by');
         } catch (error) {
             console.log(error)
         }

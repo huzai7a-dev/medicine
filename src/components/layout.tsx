@@ -2,7 +2,7 @@ import { Grid, GridItem } from "@chakra-ui/react"
 
 import Header from "./Header"
 import SearchSide from "./SearchSide"
-import MedicinesTable from "./MedicinesTable"
+import { Outlet } from "react-router-dom"
 
 const Layout = () => {
     return (
@@ -24,7 +24,7 @@ const Layout = () => {
                 <SearchSide/>
             </GridItem>
             <GridItem overflowX={"auto"} height={"full"} maxWidth={"full"} px={3} area={'main'}>
-                <MedicinesTable/>
+                <Outlet/>
             </GridItem>
         </Grid>
     )

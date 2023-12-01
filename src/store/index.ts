@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { Medicine } from '../entities/medincine';
+import { Medicine } from '../entities/medicine';
+
 
 interface MedicineState {
     medicines: Medicine[] | [],
@@ -7,10 +8,24 @@ interface MedicineState {
     loadMedicines: (medicines: Medicine[], searchFor: string) => void
 }
 
-const useMedinceStore = create<MedicineState>()((set) => ({
+interface Group {
+    brandName:string,
+    brands: Medicine[]
+}
+interface MedicineGroup {
+    groups: Group[] | [],
+    loadGroups: (groups:Group[])=> void
+}
+
+const useMedicineStore = create<MedicineState>()((set) => ({
     medicines: [],
     searchFor: "",
     loadMedicines: (medicines: Medicine[], searchFor: string) => set(() => ({ medicines, searchFor }))
 }));
 
-export { useMedinceStore }
+const useMedicineGroups = create<MedicineGroup>()((set)=> ({
+    groups:[],
+    loadGroups:(groups:Group[])=> set(()=> ({groups})),
+}))
+
+export { useMedicineStore,useMedicineGroups }

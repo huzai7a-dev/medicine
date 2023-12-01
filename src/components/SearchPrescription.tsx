@@ -1,20 +1,14 @@
-import { Box, Button, Card, CardHeader, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react"
-import InputPrescription, { InputPrescriptionRef } from "./InputPrescription"
+import { Card, CardHeader, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react"
+import InputPrescription from "./InputPrescription"
 import UploadPrescription from "./UploadPrescription"
-import { useRef } from "react"
 
 
 const SearchPrescription = () => {
-    const prescriptionRef = useRef<InputPrescriptionRef>(null);
-    
-    const handleSearch = () => {
-        if(prescriptionRef.current) prescriptionRef.current.searchiPrescription();
-    }
     return (
         <Card
             position={"relative"}
             overflowY={"auto"}
-        style={{ height: "calc(100vh - 85px - 0.25rem - 0.5rem - 150px)" }}
+            style={{ height: "calc(100vh - 85px - 0.25rem - 0.5rem - 150px)" }}
         >
             <CardHeader py={3}>
                 <Text fontWeight={"bold"} fontSize={"xl"}>Prescription:</Text>
@@ -26,21 +20,13 @@ const SearchPrescription = () => {
                 </TabList>
                 <TabPanels>
                     <TabPanel p={0}>
-                        <InputPrescription ref={prescriptionRef} />
+                        <InputPrescription />
                     </TabPanel>
                     <TabPanel>
                         <UploadPrescription/>
                     </TabPanel>
                 </TabPanels>
             </Tabs>
-            <Box
-                position={"sticky"}
-                px={3}
-                bottom={3}
-                width={"full"}
-            >
-                <Button width={"full"} onClick={handleSearch}>Search</Button>
-            </Box>
         </Card>
     )
 }
