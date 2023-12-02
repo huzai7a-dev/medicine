@@ -1,5 +1,6 @@
+import Loader from "../components/Loader";
 import MedicinesTable from "../components/MedicinesTable";
-import { useMedicineGroups } from "../store";
+import { useLoader, useMedicineGroups } from "../store";
 
 const SearchPrescription = () => {
   const { groups } = useMedicineGroups((state) => ({
@@ -7,6 +8,14 @@ const SearchPrescription = () => {
     loadGroups: state.loadGroups,
   }));
 
+  const isLoading = useLoader((store)=> store.isLoading);
+  if(isLoading) return (
+    <>
+      <Loader/>
+      <Loader/>
+      <Loader/>
+    </>
+  )
   return (
     <>
       {groups.map(({ brands:medicines,brandName:searchFor }) => (

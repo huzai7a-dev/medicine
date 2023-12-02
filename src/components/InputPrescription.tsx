@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { searchPrescription } from "../services";
 import { useNavigate } from "react-router-dom";
-import { useMedicineGroups } from "../store";
+import { useLoader, useMedicineGroups } from "../store";
 
 interface InputField {
   id: number;
@@ -20,16 +20,20 @@ interface InputField {
 const InputPrescription = () => {
   const [inputs, setInputs] = useState<InputField[]>([{ id: 1, value: "" }]);
   const loadGroups = useMedicineGroups((state) => state.loadGroups);
+  const setLoading = useLoader((store) => store.setLoading);
+
   const navigate = useNavigate();
 
   const handleSearch = async () => {
     try {
-      const data = await searchPrescription(getInputValues());
-
+      setLoading(true);
       navigate("/search-prescription");
+      const data = await searchPrescription(getInputValues());
       loadGroups(data);
     } catch (error) {
       console.log(error);
+    }finally {
+      setLoading(false)
     }
   };
 
@@ -76,10 +80,20 @@ const InputPrescription = () => {
         ))}
       </CardBody>
       <Box display={"flex"} gap={5} position={"sticky"} px={3} width={"full"}>
-        <Button width={"full"} onClick={addInput}>
+        <Button
+          colorScheme="cyan"
+          color={"white"}
+          width={"full"}
+          onClick={addInput}
+        >
           Add
         </Button>
-        <Button width={"full"} onClick={handleSearch}>
+        <Button
+          colorScheme="cyan"
+          color={"white"}
+          width={"full"}
+          onClick={handleSearch}
+        >
           Search
         </Button>
       </Box>

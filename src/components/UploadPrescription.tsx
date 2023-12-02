@@ -2,27 +2,27 @@ import { Box, Button, Image, Input, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { AiFillCamera } from "react-icons/ai";
 import { uploadPrescription } from "../services";
-import { useMedicineGroups } from "../store";
+import { useLoader, useMedicineGroups } from "../store";
 import { useNavigate } from "react-router-dom";
 const UploadPrescription = () => {
   const [image, setImage] = useState<File | undefined>();
   const navigate = useNavigate();
-  const [loading,setLoading] = useState(false);
+  const setLoading = useLoader((store) => store.setLoading);
 
-    const {loadGroup} = useMedicineGroups((store)=> ({loadGroup:store.loadGroups}));
+  const { loadGroup } = useMedicineGroups((store) => ({ loadGroup: store.loadGroups }));
 
-  const handleSearch = async()=> {
+  const handleSearch = async () => {
     try {
-        if(image) {
-            setLoading(true);
-            const response = await uploadPrescription(image);
-            loadGroup(response);
-            navigate('/search-prescription');
-        }
+      if (image) {
+        setLoading(true);
+        navigate('/search-prescription');
+        const response = await uploadPrescription(image);
+        loadGroup(response);
+      }
     } catch (error) {
-        console.log(error)
-    }finally {
-        setLoading(false);
+      console.log(error)
+    } finally {
+      setLoading(false);
     }
   }
   return (
