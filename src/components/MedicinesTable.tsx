@@ -10,7 +10,9 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { EditIcon } from '@chakra-ui/icons'
 import { Medicine } from "../entities/medicine";
+import { useState } from "react";
 
 interface Props {
   medicines: Medicine[];
@@ -25,15 +27,27 @@ const headers = [
   "Price",
   "Pack Size",
   "Reg No.",
+  "Actions"
 ];
 
 const MedicinesTable = ({ medicines, searchFor }: Props) => {
-    // const [list,setList] = useState(medicines);
+    const [list,setList] = useState(medicines);
+    const [sortOrder, setSortOrder] = useState("ascending")
 
-    // const onSort = ()=> {
-    //     const sortedList = list.sort((a,b)=> Number(b.mrp || 0)  - Number(a.mrp || 0));
-    //     setList(sortedList)
-    // }
+    const onSort = () => {
+      let sortedList = [];
+  
+      if (sortOrder === 'ascending') {
+          sortedList = list.slice().sort((a, b) => Number(a.mrp || 0) - Number(b.mrp || 0));
+          setSortOrder('descending');
+      } else {
+          sortedList = list.slice().sort((a, b) => Number(b.mrp || 0) - Number(a.mrp || 0));
+          setSortOrder('ascending');
+      }
+  
+      setList([...sortedList]);
+  };
+
 
   return (
     <TableContainer
@@ -42,24 +56,35 @@ const MedicinesTable = ({ medicines, searchFor }: Props) => {
       style={{ maxHeight: "calc(100vh - 150px)", minHeight: "auto" }}
       overflowY={"auto"}
     >
+      {
+      searchFor &&
       <Box display={"flex"} justifyContent={"space-between"}>
         <Heading marginY={3} fontSize={"xl"} as={"h2"}>
-          {searchFor && "Search result for: " + searchFor}
+          { "Search result for: " + searchFor}
         </Heading>
-        {/* <Select placeholder="Sort by" width={"min-content"}>
-          <select value="mrp">Price</select>
-        </Select> */}
       </Box>
+      }
       <Table variant="striped" className="sticky-header">
         <Thead>
           <Tr>
-            {headers.map((header) => (
-              <Th key={header}>{header}</Th>
-            ))}
+          {headers.map(header => (
+            <Th key={header}>
+              {header === 'Price' ? (
+                <>
+                  {header}
+                  <button onClick={onSort}>
+                    {sortOrder === 'ascending' ? '▲' : '▼'}
+                  </button>
+                </>
+              ) : (
+                header
+              )}
+            </Th>
+          ))}
           </Tr>
         </Thead>
         <Tbody>
-          {medicines.map((medicine) => {
+          {list.map((medicine) => {
             return (
               <Tr key={medicine.id}>
                 <Td>{medicine.brand_name}</Td>
@@ -69,6 +94,7 @@ const MedicinesTable = ({ medicines, searchFor }: Props) => {
                 <Td>{medicine.mrp}</Td>
                 <Td>{medicine.pack_size}</Td>
                 <Td>{medicine.reg_no}</Td>
+                <Td><EditIcon/></Td>
               </Tr>
             );
           })}

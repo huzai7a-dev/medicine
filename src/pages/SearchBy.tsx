@@ -6,7 +6,7 @@ const SearchBy = () => {
   const isLoading = useLoader((store) => store.isLoading);
   const { searchFor, medicines } = useMedicineStore((store) => store);
 
-  if (isLoading) return <Loader/>
+  if (isLoading) return <Loader />;
 
   return <MedicinesTable medicines={medicines} searchFor={searchFor} />;
 };

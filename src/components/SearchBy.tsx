@@ -75,6 +75,10 @@ const SearchBy = () => {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
+          <Select placeholder="Select option">
+            <option value="capsule">Capsule</option>
+            <option value="tablel"> tablet</option>
+          </Select>
           <IconButton
             onClick={findMedicine}
             aria-label="Search"

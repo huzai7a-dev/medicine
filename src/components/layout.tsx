@@ -1,7 +1,6 @@
 import { Grid, GridItem } from "@chakra-ui/react"
 
 import Header from "./Header"
-import SearchSide from "./SearchSide"
 import { Outlet } from "react-router-dom"
 
 const Layout = () => {
@@ -9,19 +8,16 @@ const Layout = () => {
         <Grid
             templateAreas={`
                 "header header"
-                 "search main"
+                 "main main"
             `}
             gridTemplateRows={'60px 1fr'}
-            gridTemplateColumns={".4fr 1fr"}
+            gridTemplateColumns={"1fr"}
             height={'100vh'}
             gap={1}
             bg={"gray.50"}
         >
             <GridItem area={"header"}>
                 <Header/>
-            </GridItem>
-            <GridItem p={5} pt={2} area={"search"}>
-                <SearchSide/>
             </GridItem>
             <GridItem overflowX={"auto"} height={"full"} maxWidth={"full"} px={3} area={'main'}>
                 <Outlet/>
