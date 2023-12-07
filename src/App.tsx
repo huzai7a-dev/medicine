@@ -1,20 +1,21 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Layout from "./components/layout";
 import SearchBy from "./pages/SearchBy";
 import SearchPrescription from "./pages/SearchPrescription";
 import InnerLayout from "./components/InnerLayout";
 import Home from "./pages/Home";
 
+const queryClient = new QueryClient();
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
-      { 
+      {
         index: true,
-        element: (
-          <Home/>
-        ),
+        element: <Home />,
       },
       {
         path: "search-by",
@@ -37,7 +38,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }
 
 export default App;
