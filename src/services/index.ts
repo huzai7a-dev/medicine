@@ -1,13 +1,17 @@
 /* eslint-disable no-useless-catch */
+import { PaginatedMedicines } from "../interfaces/medicine";
 import apiClient from "../lib/apiClient";
 
-const searchByCriteria = async (findBy: string, searchText: string) => {
+const searchByCriteria = async (
+  findBy: string,
+  searchText: string,
+  dosageForm = ""
+) => {
   try {
-    const response = await apiClient.get("find-by", {
-      params: {
-        searchCriteria: findBy,
-        searchQuery: searchText,
-      },
+    const response = await apiClient.post("find-by", {
+      searchCriteria: findBy,
+      searchQuery: searchText,
+      dosageForm,
     });
     return response.data;
   } catch (error) {
@@ -36,4 +40,20 @@ const uploadPrescription = async (file: File) => {
     throw error;
   }
 };
-export { searchByCriteria, searchPrescription, uploadPrescription };
+
+const getAllMedicines = async (
+  page = 1,
+  pageSize = 20
+): Promise<PaginatedMedicines> => {
+  const response = await apiClient.get(
+    `/get-all-medicines?page=${page}&pageSize=${pageSize}`
+  );
+  return response.data;
+};
+
+export {
+  searchByCriteria,
+  searchPrescription,
+  uploadPrescription,
+  getAllMedicines,
+};

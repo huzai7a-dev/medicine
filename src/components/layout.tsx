@@ -1,33 +1,35 @@
-import { Grid, GridItem } from "@chakra-ui/react"
+import { Grid, GridItem } from "@chakra-ui/react";
 
-import Header from "./Header"
-import SearchSide from "./SearchSide"
-import { Outlet } from "react-router-dom"
+import Header from "./Header";
+import { Outlet } from "react-router-dom";
 
 const Layout = () => {
-    return (
-        <Grid
-            templateAreas={`
+  return (
+    <Grid
+      templateAreas={`
                 "header header"
-                 "search main"
+                 "main main"
             `}
-            gridTemplateRows={'60px 1fr'}
-            gridTemplateColumns={".4fr 1fr"}
-            height={'100vh'}
-            gap={1}
-            bg={"gray.50"}
-        >
-            <GridItem area={"header"}>
-                <Header/>
-            </GridItem>
-            <GridItem p={5} pt={2} area={"search"}>
-                <SearchSide/>
-            </GridItem>
-            <GridItem overflowX={"auto"} height={"full"} maxWidth={"full"} px={3} area={'main'}>
-                <Outlet/>
-            </GridItem>
-        </Grid>
-    )
-}
+      gridTemplateRows={"60px 1fr"}
+      gridTemplateColumns={"1fr"}
+      height={"100vh"}
+      gap={1}
+      bg={"gray.50"}
+    >
+      <GridItem area={"header"}>
+        <Header />
+      </GridItem>
+      <GridItem
+        overflowX={"auto"}
+        height={"full"}
+        maxWidth={"full"}
+        px={3}
+        area={"main"}
+      >
+        <Outlet />
+      </GridItem>
+    </Grid>
+  );
+};
 
-export default Layout
+export default Layout;
