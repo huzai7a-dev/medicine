@@ -2,11 +2,16 @@
 import { PaginatedMedicines } from "../interfaces/medicine";
 import apiClient from "../lib/apiClient";
 
-const searchByCriteria = async (findBy: string, searchText: string) => {
+const searchByCriteria = async (
+  findBy: string,
+  searchText: string,
+  dosageForm = ""
+) => {
   try {
     const response = await apiClient.post("find-by", {
       searchCriteria: findBy,
       searchQuery: searchText,
+      dosageForm,
     });
     return response.data;
   } catch (error) {
