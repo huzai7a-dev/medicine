@@ -1,9 +1,10 @@
 import MedicinesTable from "../components/MedicinesTable";
-import { useLoader, useMedicineStore } from "../store";
+import { useMedicineStore } from "../store/medicine";
 import Loader from "../components/Loader";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getAllMedicines } from "../services";
 import { useState } from "react";
+import { useLoader } from "../store/app";
 
 const SearchBy = () => {
   const isLoading = useLoader((store) => store.isLoading);
@@ -14,7 +15,7 @@ const SearchBy = () => {
     queryKey: ["medicine", page],
     placeholderData: keepPreviousData,
   });
-  console.log("first");
+
   const handleNextPage = () => {
     setPage(page + 1);
   };
@@ -22,8 +23,6 @@ const SearchBy = () => {
   const handlePrev = () => {
     setPage(page - 1);
   };
-
-  console.log(allMedicines?.data, "allMedicines.data");
 
   if (isLoading || isAllMedicineLoading) return <Loader />;
 

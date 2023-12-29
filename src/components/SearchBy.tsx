@@ -10,9 +10,10 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { searchByCriteria } from "../services";
-import { useLoader, useMedicineStore } from "../store";
+import { useMedicineStore } from "../store/medicine";
 import { useNavigate } from "react-router-dom";
 import { SearchIcon } from "@chakra-ui/icons";
+import { useLoader } from "../store/app";
 
 const searches = [
   {

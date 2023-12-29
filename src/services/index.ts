@@ -1,4 +1,5 @@
 /* eslint-disable no-useless-catch */
+import { QueryType } from "../interfaces/common";
 import { PaginatedMedicines } from "../interfaces/medicine";
 import apiClient from "../lib/apiClient";
 
@@ -51,9 +52,56 @@ const getAllMedicines = async (
   return response.data;
 };
 
+// ************ pharmacist services ********************
+const getAllPharmacistMedicines = async (
+  page = 1,
+  pageSize = 20,
+  deleted = false,
+  query: QueryType | null = null
+) => {
+  let url = `/get-full-medicines?page=${page}&pageSize=${pageSize}&deleted=${deleted}`;
+  if (query?.searchBy) {
+    url = `/get-full-medicines?page=${page}&pageSize=${pageSize}&deleted=${deleted}&findBy=${query.searchBy}&value=${query.value}`;
+  }
+  const response = await apiClient.get(url);
+  return response.data;
+};
+
+const deleteMedicine = async (id: number | string) => {
+  const response = await apiClient.delete(`/medicines/${id}`);
+  return response.data;
+};
+// ************* auth services ***********************
+const signupUser = async (formData: {
+  name: string;
+  username: string;
+  password: string;
+  mobile_no: string;
+  address: string;
+  details: string;
+}) => {
+  const response = await apiClient.post("/auth/signup", {
+    ...formData,
+    is_public: true,
+  });
+  return response.data;
+};
+
+const loginUser = async (formData: { username: string; password: string }) => {
+  const response = await apiClient.post("/auth/login", {
+    ...formData,
+    is_public: true,
+  });
+  return response.data;
+};
+
 export {
   searchByCriteria,
   searchPrescription,
   uploadPrescription,
   getAllMedicines,
+  getAllPharmacistMedicines,
+  deleteMedicine,
+  signupUser,
+  loginUser,
 };

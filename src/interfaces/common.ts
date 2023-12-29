@@ -5,3 +5,18 @@ export interface PaginationData {
   totalPages: number;
   hasMore: boolean;
 }
+
+export interface UserData {
+  address: string | null;
+  details: string | null;
+  id: number;
+  is_public: boolean;
+  name: string;
+  type: "public" | "pharmacist";
+  username: string;
+}
+
+export interface QueryType {
+  searchBy: string;
+  value: string;
+}

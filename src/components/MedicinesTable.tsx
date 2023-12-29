@@ -3,7 +3,6 @@ import {
   Button,
   Flex,
   Heading,
-  //   Select,
   Table,
   TableContainer,
   Tbody,
@@ -12,7 +11,6 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
 import { Medicine } from "../interfaces/medicine";
 import { useEffect, useState } from "react";
 import { PaginationData } from "../interfaces/common";
@@ -35,7 +33,7 @@ const headers = [
   "Milligrams",
   "Pack Size",
   "Reg No.",
-  "Actions",
+  // "Actions",
 ];
 
 const MedicinesTable = ({
@@ -117,9 +115,6 @@ const MedicinesTable = ({
                   <Td>{medicine.milligrams}</Td>
                   <Td>{medicine.pack_size}</Td>
                   <Td>{medicine.reg_no}</Td>
-                  <Td>
-                    <EditIcon />
-                  </Td>
                 </Tr>
               );
             })}

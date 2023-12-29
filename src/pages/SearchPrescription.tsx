@@ -1,6 +1,7 @@
 import Loader from "../components/Loader";
 import MedicinesTable from "../components/MedicinesTable";
-import { useLoader, useMedicineGroups } from "../store";
+import { useLoader } from "../store/app";
+import { useMedicineGroups } from "../store/medicine";
 
 const SearchPrescription = () => {
   const { groups } = useMedicineGroups((state) => ({
@@ -8,17 +9,18 @@ const SearchPrescription = () => {
     loadGroups: state.loadGroups,
   }));
 
-  const isLoading = useLoader((store)=> store.isLoading);
-  if(isLoading) return (
-    <>
-      <Loader/>
-      <Loader/>
-      <Loader/>
-    </>
-  )
+  const isLoading = useLoader((store) => store.isLoading);
+  if (isLoading)
+    return (
+      <>
+        <Loader />
+        <Loader />
+        <Loader />
+      </>
+    );
   return (
     <>
-      {groups.map(({ brands:medicines,brandName:searchFor }) => (
+      {groups.map(({ brands: medicines, brandName: searchFor }) => (
         <MedicinesTable medicines={medicines} searchFor={searchFor} />
       ))}
     </>

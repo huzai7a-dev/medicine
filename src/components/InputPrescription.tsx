@@ -10,7 +10,8 @@ import {
 import { useState } from "react";
 import { searchPrescription } from "../services";
 import { useNavigate } from "react-router-dom";
-import { useLoader, useMedicineGroups } from "../store";
+import { useMedicineGroups } from "../store/medicine";
+import { useLoader } from "../store/app";
 
 interface InputField {
   id: number;
@@ -32,8 +33,8 @@ const InputPrescription = () => {
       loadGroups(data);
     } catch (error) {
       console.log(error);
-    }finally {
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
