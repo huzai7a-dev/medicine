@@ -4,16 +4,34 @@ import {
   Image,
   Link as ChakraLink,
   Box,
+  Avatar,
+  MenuButton,
+  Menu,
+  MenuList,
+  MenuItem,
+  Divider,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import Logo from "../assets/icons/logo.png";
 import { useAuthStore } from "../store/auth";
+import { AiOutlineUser } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
-  const userType = useAuthStore((store) => store.authUser?.type);
+  const navigate = useNavigate();
+  
+  const {authUser, storeToken, authToken  } = useAuthStore();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("auth-storage");
+    storeToken("");
+    navigate('/signup')
+  }
+ 
+
   return (
     <HStack display={"flex"} shadow={"base"} px={4} height={"100%"}>
       <ChakraLink as={ReactRouterLink} to="/">
@@ -47,7 +65,7 @@ const Header = () => {
             Prescription
           </Button>
         </ChakraLink>
-        {userType === "pharmacist" && (
+        {authUser?.type === "pharmacist" && (
           <ChakraLink
             as={ReactRouterLink}
             to="/pharmacist"
@@ -59,14 +77,37 @@ const Header = () => {
           </ChakraLink>
         )}
       </Box>
-      <Button
-        colorScheme="cyan"
-        display={"flex"}
-        color={"white"}
-        onClick={() => setShowLogin(true)}
-      >
-        Login
-      </Button>
+      {authToken ? (
+        <Menu>
+        <MenuButton as={Button} rightIcon={<Avatar bg='red.500' size={"sm"} icon={<AiOutlineUser fontSize='1rem' />} />}>
+          Sign in as {authUser?.type}
+        </MenuButton>
+        <MenuList>
+          <MenuItem>{authUser?.username}</MenuItem>
+          {authUser?.address && 
+          <MenuItem>{authUser.address}</MenuItem>
+          }
+          {authUser?.details &&
+          <MenuItem>{authUser?.details}</MenuItem>
+          }
+          <Divider/>
+          <MenuItem as={Button} onClick={handleLogout}>Logout</MenuItem>
+        </MenuList>
+      </Menu>
+       
+      ) : 
+      (       
+        <Button
+          colorScheme="cyan"
+          display={"flex"}
+          color={"white"}
+          onClick={() => setShowLogin(true)}
+        >
+          Login
+        </Button>
+      )
+
+      }
       <LoginForm isOpen={showLogin} onClose={() => setShowLogin(false)} />
     </HStack>
   );

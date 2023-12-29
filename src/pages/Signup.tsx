@@ -10,14 +10,40 @@ import {
   Switch,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent,  useState } from "react";
 import { signupUser } from "../services";
-
+import { useToast } from '@chakra-ui/react';
 const Signup = () => {
+  const toast = useToast();
   const { mutate: singup } = useMutation({
     mutationKey: ["signup"],
     mutationFn: signupUser,
-  });
+    onError: (error : any) => {
+      console.log(error?.response?.data , "message")
+      let errorMessage = error?.response?.data;
+      if (error?.response?.data?.errors?.length > 0) {
+        errorMessage = error?.response?.data?.errors[0]?.message; // Use specific error message if available
+      }
+      
+      toast({
+        title: 'Signup Error',
+        description: errorMessage,
+        status: 'error',
+        duration: 5000, 
+        isClosable: true, 
+      });
+    },
+    onSuccess: () =>{
+      toast({
+        title: 'Signup Error',
+        description: 'sign in succesfully.',
+        status: 'success',
+        duration: 5000, 
+        isClosable: true, 
+      });
+    } 
+  })
+  
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -39,7 +65,9 @@ const Signup = () => {
   };
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    singup(formData);
+      singup(formData)
+ 
+   
   };
   return (
     <ChakraProvider>
