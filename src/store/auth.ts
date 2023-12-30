@@ -6,7 +6,7 @@ interface AuthStore {
   authToken: string | null;
   storeToken: (token: string) => void;
   authUser: UserData | null;
-  storeUser: (user: UserData) => void;
+  storeUser: (user: UserData | null) => void;
 }
 const useAuthStore = create<AuthStore>()(
   persist(

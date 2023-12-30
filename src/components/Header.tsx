@@ -23,11 +23,12 @@ const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
   const navigate = useNavigate();
 
-  const { authUser, storeToken, authToken } = useAuthStore();
+  const { authUser, storeToken, authToken, storeUser } = useAuthStore();
 
   const handleLogout = () => {
-    sessionStorage.removeItem("auth-storage");
+    sessionStorage.clear();
     storeToken("");
+    storeUser(null);
     navigate("/");
   };
 
