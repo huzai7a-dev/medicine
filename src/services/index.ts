@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 import { QueryType } from "../interfaces/common";
-import { PaginatedMedicines } from "../interfaces/medicine";
+import { Medicine, PaginatedMedicines } from "../interfaces/medicine";
 import apiClient from "../lib/apiClient";
 
 const searchByCriteria = async (
@@ -67,8 +67,15 @@ const getAllPharmacistMedicines = async (
   return response.data;
 };
 
+const updateMed = async ( data: Medicine): Promise<any> => {
+
+    const response = await apiClient.put(`/medicine/${data.id}`, data);
+    return response.data;
+ 
+};
+
 const deleteMedicine = async (id: number | string) => {
-  const response = await apiClient.delete(`/medicines/${id}`);
+  const response = await apiClient.delete(`/medicine/${id}`);
   return response.data;
 };
 // ************* auth services ***********************
@@ -104,4 +111,5 @@ export {
   deleteMedicine,
   signupUser,
   loginUser,
+   updateMed,
 };

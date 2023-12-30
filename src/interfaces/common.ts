@@ -6,6 +6,7 @@ export interface PaginationData {
   hasMore: boolean;
 }
 
+
 export interface UserData {
   address: string | null;
   details: string | null;

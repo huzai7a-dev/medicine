@@ -16,6 +16,8 @@ import { useState } from "react";
 import { loginUser } from "../services";
 import { useAuthStore } from "../store/auth";
 import { UserData } from "../interfaces/common";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 
 interface Props {
   isOpen: boolean;
@@ -24,6 +26,8 @@ interface Props {
 const LoginForm = ({ isOpen, onClose }: Props) => {
   const storeAuth = useAuthStore((store) => store.storeUser);
   const storeToken = useAuthStore((store) => store.storeToken);
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +37,19 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
     onSuccess: (response) => {
       storeToken(response.access_token as string);
       storeAuth(response.data as UserData);
+      navigate("/search-by")
+      onClose(); 
     },
+    onError: (error :any)=>{
+      // console.log(error?.response?.data?.message);
+      toast({
+        title: 'login Error',
+        description:  error?.response?.data?.message ||'login failed' ,
+        status: 'error',
+        duration: 5000, 
+        isClosable: true, 
+      });
+    }
   });
 
   return (
@@ -63,6 +79,7 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
                 onClick={() => login({ username, password })}
                 colorScheme="cyan"
                 color={"white"}
+                disabled={!username.length  || !password.length}
               >
                 Login
               </Button>
