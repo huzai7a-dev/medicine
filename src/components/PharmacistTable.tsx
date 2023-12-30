@@ -60,14 +60,18 @@ const PharmacistTable = ({
 }: Props) => {
   const [list, setList] = useState(medicines);
   const [showUpdate, setShowUpdate] = useState(false);
-  const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
+  const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(
+    null
+  );
   const [sortOrder, setSortOrder] = useState("ascending");
-  const [selectedMilligramFilter, setSelectedMilligramFilter] = useState("none");
+  const [selectedMilligramFilter, setSelectedMilligramFilter] =
+    useState("none");
 
   const [searchQuery, setSearchQuery] = useState<QueryType>({
     searchBy: "",
     value: "",
   });
+
   const toast = useToast();
   const disableSearch = !searchQuery.searchBy || !searchQuery.value;
   const handleSearchBy = (searchBy: string) => {
@@ -106,28 +110,29 @@ const PharmacistTable = ({
     mutationFn: deleteMedicine,
     onError: (error) => {
       toast({
-        title: 'delete Medicine',
-        description: error.message || 'An error occurred during deleting medicine.',
-        status: 'error',
+        title: "delete Medicine",
+        description:
+          error.message || "An error occurred during deleting medicine.",
+        status: "error",
         duration: 5000,
         isClosable: true,
       });
     },
     onSuccess: () => {
       toast({
-        title: 'delete Medicine',
-        description: 'deleted succesfully.',
-        status: 'success',
+        title: "delete Medicine",
+        description: "deleted succesfully.",
+        status: "success",
         duration: 5000,
         isClosable: true,
       });
-    }
-  })
+    },
+  });
   const handleDelete = (id: string | number) => {
-    deleteMed(id)
+    deleteMed(id);
     const updatedList = list.filter((medicine) => medicine.id !== id);
     setList(updatedList);
-  }
+  };
   const handleEdit = (medicines: Medicine) => {
     setSelectedMedicine(medicines);
     setShowUpdate(true);
@@ -148,7 +153,10 @@ const PharmacistTable = ({
               placeholder="Search..."
               mr={2}
             />
-            <Select width="auto" onChange={(e) => handleSearchBy(e.target.value)}>
+            <Select
+              width="auto"
+              onChange={(e) => handleSearchBy(e.target.value)}
+            >
               <option value={""}>Search by</option>
               <option value="brand_name">Brand Name</option>
               <option value="formula">Formula</option>
@@ -164,29 +172,41 @@ const PharmacistTable = ({
               Search
             </Button>
           </Flex>
-          <Box width={"full"} display={"flex"} justifyContent={"flex-end"} p={4}>
-          <Flex width={"full"} alignItems="center" justifyContent={"flex-end"}gap={10} >
-            <Select
-              // paddingRight={10}
-              width="auto"
-              onChange={(e) => setSelectedMilligramFilter(e.target.value)}
-              value={selectedMilligramFilter}
+          <Box
+            width={"full"}
+            display={"flex"}
+            justifyContent={"flex-end"}
+            p={4}
+          >
+            <Flex
+              width={"full"}
+              alignItems="center"
+              justifyContent={"flex-end"}
+              gap={10}
             >
-              <option value="none">None</option>
-              <option value="500mg">500mg</option>
-              <option value="400mg">400mg</option>
-              <option value="250mg">250mg</option>
-            </Select>
-            <Flex>
-
-              <FormLabel htmlFor="isChecked">Show Deleted</FormLabel>
-            <Switch
-              id="isChecked"
-              onChange={() => setShowDelete(!showDelete)}
-              isChecked={showDelete}
-            />
+              <Flex alignItems={"center"}>
+                <p>Milligrams</p>
+                <Select
+                  ml={2}
+                  width="auto"
+                  onChange={(e) => setSelectedMilligramFilter(e.target.value)}
+                  value={selectedMilligramFilter}
+                >
+                  <option value="none">None</option>
+                  <option value="500mg">500mg</option>
+                  <option value="400mg">400mg</option>
+                  <option value="250mg">250mg</option>
+                </Select>
+              </Flex>
+              <Flex>
+                <FormLabel htmlFor="isChecked">Show Deleted</FormLabel>
+                <Switch
+                  id="isChecked"
+                  onChange={() => setShowDelete(!showDelete)}
+                  isChecked={showDelete}
+                />
+              </Flex>
             </Flex>
-          </Flex>
           </Box>
         </Flex>
 
@@ -226,7 +246,7 @@ const PharmacistTable = ({
               {list
                 .filter((medicine) => {
                   if (selectedMilligramFilter === "none") {
-                    return true; 
+                    return true;
                   } else {
                     return medicine.milligrams === selectedMilligramFilter;
                   }
@@ -252,8 +272,12 @@ const PharmacistTable = ({
                           {medicine.is_public && (
                             <IconButton
                               aria-label="Delete Medicine"
-                              icon={<DeleteIcon color={"red"}
-                                onClick={() => handleDelete(medicine.id)} />}
+                              icon={
+                                <DeleteIcon
+                                  color={"red"}
+                                  onClick={() => handleDelete(medicine.id)}
+                                />
+                              }
                             />
                           )}
                         </Box>

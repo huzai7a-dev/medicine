@@ -22,15 +22,14 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
   const navigate = useNavigate();
-  
-  const {authUser, storeToken, authToken  } = useAuthStore();
+
+  const { authUser, storeToken, authToken } = useAuthStore();
 
   const handleLogout = () => {
     sessionStorage.removeItem("auth-storage");
     storeToken("");
-    navigate('/signup')
-  }
- 
+    navigate("/");
+  };
 
   return (
     <HStack display={"flex"} shadow={"base"} px={4} height={"100%"}>
@@ -79,24 +78,29 @@ const Header = () => {
       </Box>
       {authToken ? (
         <Menu>
-        <MenuButton as={Button} rightIcon={<Avatar bg='red.500' size={"sm"} icon={<AiOutlineUser fontSize='1rem' />} />}>
-          Sign in as {authUser?.type}
-        </MenuButton>
-        <MenuList>
-          <MenuItem>{authUser?.username}</MenuItem>
-          {authUser?.address && 
-          <MenuItem>{authUser.address}</MenuItem>
-          }
-          {authUser?.details &&
-          <MenuItem>{authUser?.details}</MenuItem>
-          }
-          <Divider/>
-          <MenuItem as={Button} onClick={handleLogout}>Logout</MenuItem>
-        </MenuList>
-      </Menu>
-       
-      ) : 
-      (       
+          <MenuButton
+            as={Button}
+            rightIcon={
+              <Avatar
+                bg="red.500"
+                size={"sm"}
+                icon={<AiOutlineUser fontSize="1rem" />}
+              />
+            }
+          >
+            Sign in as {authUser?.type}
+          </MenuButton>
+          <MenuList>
+            <MenuItem>{authUser?.username}</MenuItem>
+            {authUser?.address && <MenuItem>{authUser.address}</MenuItem>}
+            {authUser?.details && <MenuItem>{authUser?.details}</MenuItem>}
+            <Divider />
+            <MenuItem as={Button} onClick={handleLogout}>
+              Logout
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      ) : (
         <Button
           colorScheme="cyan"
           display={"flex"}
@@ -105,9 +109,7 @@ const Header = () => {
         >
           Login
         </Button>
-      )
-
-      }
+      )}
       <LoginForm isOpen={showLogin} onClose={() => setShowLogin(false)} />
     </HStack>
   );

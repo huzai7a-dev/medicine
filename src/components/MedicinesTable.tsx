@@ -3,6 +3,7 @@ import {
   Button,
   Flex,
   Heading,
+  Select,
   Table,
   TableContainer,
   Tbody,
@@ -46,6 +47,8 @@ const MedicinesTable = ({
 }: Props) => {
   const [list, setList] = useState(medicines);
   const [sortOrder, setSortOrder] = useState("ascending");
+  const [selectedMilligramFilter, setSelectedMilligramFilter] =
+    useState("none");
 
   const onSort = () => {
     let sortedList = [];
@@ -77,6 +80,20 @@ const MedicinesTable = ({
         style={{ maxHeight: "calc(100vh - 150px)", minHeight: "auto" }}
         overflowY={"auto"}
       >
+        <Flex my={4} alignItems={"center"} justifyContent={"flex-end"}>
+          <p>Milligrams</p>
+          <Select
+            ml={2}
+            width="auto"
+            onChange={(e) => setSelectedMilligramFilter(e.target.value)}
+            value={selectedMilligramFilter}
+          >
+            <option value="none">None</option>
+            <option value="500mg">500mg</option>
+            <option value="400mg">400mg</option>
+            <option value="250mg">250mg</option>
+          </Select>
+        </Flex>
         {searchFor && (
           <Box display={"flex"} justifyContent={"space-between"}>
             <Heading marginY={3} fontSize={"xl"} as={"h2"}>
@@ -104,20 +121,28 @@ const MedicinesTable = ({
             </Tr>
           </Thead>
           <Tbody>
-            {list.map((medicine) => {
-              return (
-                <Tr key={medicine.id}>
-                  <Td>{medicine.brand_name}</Td>
-                  <Td>{medicine.company_name}</Td>
-                  <Td>{medicine.dosage_form}</Td>
-                  <Td>{medicine.formula}</Td>
-                  <Td>{medicine.mrp}</Td>
-                  <Td>{medicine.milligrams}</Td>
-                  <Td>{medicine.pack_size}</Td>
-                  <Td>{medicine.reg_no}</Td>
-                </Tr>
-              );
-            })}
+            {list
+              .filter((medicine) => {
+                if (selectedMilligramFilter === "none") {
+                  return true;
+                } else {
+                  return medicine.milligrams === selectedMilligramFilter;
+                }
+              })
+              .map((medicine) => {
+                return (
+                  <Tr key={medicine.id}>
+                    <Td>{medicine.brand_name}</Td>
+                    <Td>{medicine.company_name}</Td>
+                    <Td>{medicine.dosage_form}</Td>
+                    <Td>{medicine.formula}</Td>
+                    <Td>{medicine.mrp}</Td>
+                    <Td>{medicine.milligrams}</Td>
+                    <Td>{medicine.pack_size}</Td>
+                    <Td>{medicine.reg_no}</Td>
+                  </Tr>
+                );
+              })}
           </Tbody>
         </Table>
       </TableContainer>

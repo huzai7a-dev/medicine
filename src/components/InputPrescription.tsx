@@ -7,7 +7,7 @@ import {
   IconButton,
   Input,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { searchPrescription } from "../services";
 import { useNavigate } from "react-router-dom";
 import { useMedicineGroups } from "../store/medicine";
@@ -18,11 +18,20 @@ interface InputField {
   value: string;
 }
 
+function isArrayNonEmpty(arr: InputField[]) {
+  return arr.every(
+    (element) =>
+      element.value !== "" &&
+      element.value !== null &&
+      element.value !== undefined
+  );
+}
+
 const InputPrescription = () => {
   const [inputs, setInputs] = useState<InputField[]>([{ id: 1, value: "" }]);
   const loadGroups = useMedicineGroups((state) => state.loadGroups);
   const setLoading = useLoader((store) => store.setLoading);
-
+  const inputsEmpty = useMemo(() => !isArrayNonEmpty(inputs), [inputs]);
   const navigate = useNavigate();
 
   const handleSearch = async () => {
@@ -93,6 +102,7 @@ const InputPrescription = () => {
           colorScheme="cyan"
           color={"white"}
           width={"full"}
+          isDisabled={inputsEmpty}
           onClick={handleSearch}
         >
           Search
