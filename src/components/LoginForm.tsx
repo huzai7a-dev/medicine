@@ -14,12 +14,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
 import { loginUser } from "../services";
 import { useAuthStore } from "../store/auth";
 import { UserData } from "../interfaces/common";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
+import { useFormik } from "formik";
+import { loginSchema, loginInitialValues } from "../lib/validationSchema"
 
 interface Props {
   isOpen: boolean;
@@ -31,8 +32,6 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const { mutate: login } = useMutation({
     mutationKey: ["login"],
     mutationFn: loginUser,
@@ -53,6 +52,20 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
     },
   });
 
+ 
+
+  const formik = useFormik({
+    initialValues: loginInitialValues,
+    validationSchema: loginSchema,
+    onSubmit:  ({ username, password }) => {
+      try {
+         login({ username, password });
+      } catch (error) {
+        console.error("Login error:", error);
+      }
+    },
+  });
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -61,25 +74,36 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
         <ModalHeader>Login</ModalHeader>
         <ModalBody>
           <FormControl p={5}>
+          <form onSubmit={formik.handleSubmit}>
             <Box display={"flex"} flexDir={"column"} gap={5}>
               <Box>
                 <FormLabel>Username</FormLabel>
                 <Input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  type="text"
+                   name="username"
+                   value={formik.values.username}
+                   onChange={formik.handleChange}
+                   onBlur={formik.handleBlur}
+                   type="text"
                 />
+                 {formik.touched.username && formik.errors.username && (
+                  <Text color="red">{formik.errors.username}</Text>
+                )}
               </Box>
               <Box>
                 <FormLabel>Password</FormLabel>
                 <Input
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  type="password"
+                 name="password"
+                 value={formik.values.password}
+                 onChange={formik.handleChange}
+                 onBlur={formik.handleBlur}
+                 type="password"
                 />
+                  {formik.touched.password && formik.errors.password && (
+                  <Text color="red">{formik.errors.password}</Text>
+                )}
               </Box>
               <Button
-                onClick={() => login({ username, password })}
+                type="submit"
                 colorScheme="cyan"
                 color={"white"}
                 // isDisabled={!username.length || !password.length}
@@ -94,6 +118,7 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
                 Singup
               </Link>
             </Text>
+            </form>
           </FormControl>
         </ModalBody>
       </ModalContent>
