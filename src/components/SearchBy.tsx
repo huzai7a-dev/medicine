@@ -25,7 +25,7 @@ const searches = [
     title: "Company",
   },
   {
-    value: "formulation",
+    value: "formula",
     title: "Generics",
   },
 ];
@@ -52,6 +52,15 @@ const SearchBy = () => {
     }
   };
 
+  const handleSelectDosageForm = (value: string) => {
+    if (value === "none") {
+      setFindBy("");
+      setSearchText("");
+      navigate(0);
+      return;
+    }
+    setDosageForm(value);
+  };
   return (
     <Card height={140}>
       <CardHeader py={2}>
@@ -61,7 +70,12 @@ const SearchBy = () => {
       </CardHeader>
       <CardBody py={0}>
         <Select
-          onChange={(e) => setFindBy(e.target.value)}
+          value={findBy}
+          onChange={(e) => {
+            setDosageForm("");
+            setSearchText("");
+            setFindBy(e.target.value);
+          }}
           placeholder="Search By"
         >
           {searches.map((search) => (
@@ -78,12 +92,12 @@ const SearchBy = () => {
             onChange={(e) => setSearchText(e.target.value)}
           />
           <Select
-            onChange={(e) => setDosageForm(e.target.value)}
-            placeholder="Select option"
+            value={dosageForm}
+            onChange={(e) => handleSelectDosageForm(e.target.value)}
           >
+            <option value="none">None</option>
             <option value="capsule">Capsule</option>
             <option value="tablet">Tablet</option>
-            <option value="injection">Injection</option>
           </Select>
           <IconButton
             onClick={findMedicine}

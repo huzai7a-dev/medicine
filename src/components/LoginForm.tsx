@@ -7,7 +7,9 @@ import {
   Link,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
+  ModalHeader,
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
@@ -37,25 +39,26 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
     onSuccess: (response) => {
       storeToken(response.access_token as string);
       storeAuth(response.data as UserData);
-      navigate("/search-by")
-      onClose(); 
+      navigate("/search-by");
+      onClose();
     },
-    onError: (error :any)=>{
-      // console.log(error?.response?.data?.message);
+    onError: (error: unknown) => {
       toast({
-        title: 'login Error',
-        description:  error?.response?.data?.message ||'login failed' ,
-        status: 'error',
-        duration: 5000, 
-        isClosable: true, 
+        title: "login Error",
+        description: error?.response?.data?.message || "login failed",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
       });
-    }
+    },
   });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
+        <ModalCloseButton onClick={() => navigate("/")} />
+        <ModalHeader>Login</ModalHeader>
         <ModalBody>
           <FormControl p={5}>
             <Box display={"flex"} flexDir={"column"} gap={5}>
@@ -79,7 +82,7 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
                 onClick={() => login({ username, password })}
                 colorScheme="cyan"
                 color={"white"}
-                disabled={!username.length  || !password.length}
+                // isDisabled={!username.length || !password.length}
               >
                 Login
               </Button>

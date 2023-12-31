@@ -26,6 +26,7 @@ interface Props {
 }
 
 const headers = [
+  "Reg No.",
   "Brand",
   "Company",
   "Dosage form",
@@ -33,8 +34,6 @@ const headers = [
   "Price",
   "Milligrams",
   "Pack Size",
-  "Reg No.",
-  // "Actions",
 ];
 
 const MedicinesTable = ({
@@ -47,6 +46,7 @@ const MedicinesTable = ({
 }: Props) => {
   const [list, setList] = useState(medicines);
   const [sortOrder, setSortOrder] = useState("ascending");
+  const [sortFormula, setSorFormula] = useState(false);
   const [selectedMilligramFilter, setSelectedMilligramFilter] =
     useState("none");
 
@@ -71,6 +71,44 @@ const MedicinesTable = ({
   useEffect(() => {
     setList(medicines); // should be removed
   }, [medicines]);
+
+  const sortByAlphabets = (a: Medicine, b: Medicine, sortFormula: boolean) => {
+    if (!sortFormula) return 0;
+    if (a?.formula && b?.formula) {
+      if (a?.formula < b?.formula) {
+        return -1;
+      }
+      if (a?.formula > b?.formula) {
+        return 1;
+      }
+    }
+    return 0;
+  };
+
+  const RenderHeader = ({ header }: { header: string }) => {
+    if (header === "Price") {
+      return (
+        <>
+          {header}
+          <button onClick={onSort}>
+            {sortOrder === "ascending" ? "▲" : "▼"}
+          </button>
+        </>
+      );
+    }
+    if (header === "Formula") {
+      return (
+        <>
+          {header}
+          <button onClick={() => setSorFormula(!sortFormula)}>
+            {sortFormula ? "▲" : "▼"}
+          </button>
+        </>
+      );
+    } else {
+      return header;
+    }
+  };
 
   return (
     <Box>
@@ -106,22 +144,14 @@ const MedicinesTable = ({
             <Tr>
               {headers.map((header) => (
                 <Th key={header}>
-                  {header === "Price" ? (
-                    <>
-                      {header}
-                      <button onClick={onSort}>
-                        {sortOrder === "ascending" ? "▲" : "▼"}
-                      </button>
-                    </>
-                  ) : (
-                    header
-                  )}
+                  <RenderHeader header={header} />
                 </Th>
               ))}
             </Tr>
           </Thead>
           <Tbody>
             {list
+              .sort((a, b) => sortByAlphabets(a, b, sortFormula))
               .filter((medicine) => {
                 if (selectedMilligramFilter === "none") {
                   return true;
@@ -132,6 +162,7 @@ const MedicinesTable = ({
               .map((medicine) => {
                 return (
                   <Tr key={medicine.id}>
+                    <Td>{medicine.reg_no}</Td>
                     <Td>{medicine.brand_name}</Td>
                     <Td>{medicine.company_name}</Td>
                     <Td>{medicine.dosage_form}</Td>
@@ -139,7 +170,6 @@ const MedicinesTable = ({
                     <Td>{medicine.mrp}</Td>
                     <Td>{medicine.milligrams}</Td>
                     <Td>{medicine.pack_size}</Td>
-                    <Td>{medicine.reg_no}</Td>
                   </Tr>
                 );
               })}
