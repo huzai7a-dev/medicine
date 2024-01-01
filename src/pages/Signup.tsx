@@ -7,13 +7,13 @@ import {
   Textarea,
   Button,
   VStack,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { signupUser } from "../services";
 import { useToast } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { SignupSchema, SignupInitialValues } from "../lib/validationSchema"
+import { SignupSchema, SignupInitialValues } from "../lib/validationSchema";
 
 const Signup = () => {
   const toast = useToast();
@@ -21,7 +21,6 @@ const Signup = () => {
     mutationKey: ["signup"],
     mutationFn: signupUser,
     onError: (error: any) => {
-      console.log(error?.response?.data, "message");
       let errorMessage = error?.response?.data;
       if (error?.response?.data?.errors?.length > 0) {
         errorMessage = error?.response?.data?.errors[0]?.message; // Use specific error message if available
@@ -38,7 +37,7 @@ const Signup = () => {
     onSuccess: () => {
       toast({
         title: "Signup Error",
-        description: "sign in succesfully.",
+        description: "sign in successfully.",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -50,11 +49,9 @@ const Signup = () => {
     initialValues: SignupInitialValues,
     validationSchema: SignupSchema,
     onSubmit: (values) => {
-      
       signup(values);
     },
   });
-
 
   return (
     <ChakraProvider>

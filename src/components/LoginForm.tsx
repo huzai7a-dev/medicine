@@ -20,7 +20,7 @@ import { UserData } from "../interfaces/common";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { loginSchema, loginInitialValues } from "../lib/validationSchema"
+import { loginSchema, loginInitialValues } from "../lib/validationSchema";
 
 interface Props {
   isOpen: boolean;
@@ -52,14 +52,12 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
     },
   });
 
- 
-
   const formik = useFormik({
     initialValues: loginInitialValues,
     validationSchema: loginSchema,
-    onSubmit:  ({ username, password }) => {
+    onSubmit: ({ username, password }) => {
       try {
-         login({ username, password });
+        login({ username, password });
       } catch (error) {
         console.error("Login error:", error);
       }
@@ -74,50 +72,50 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
         <ModalHeader>Login</ModalHeader>
         <ModalBody>
           <FormControl p={5}>
-          <form onSubmit={formik.handleSubmit}>
-            <Box display={"flex"} flexDir={"column"} gap={5}>
-              <Box>
-                <FormLabel>Username</FormLabel>
-                <Input
-                   name="username"
-                   value={formik.values.username}
-                   onChange={formik.handleChange}
-                   onBlur={formik.handleBlur}
-                   type="text"
-                />
-                 {formik.touched.username && formik.errors.username && (
-                  <Text color="red">{formik.errors.username}</Text>
-                )}
-              </Box>
-              <Box>
-                <FormLabel>Password</FormLabel>
-                <Input
-                 name="password"
-                 value={formik.values.password}
-                 onChange={formik.handleChange}
-                 onBlur={formik.handleBlur}
-                 type="password"
-                />
+            <form onSubmit={formik.handleSubmit}>
+              <Box display={"flex"} flexDir={"column"} gap={5}>
+                <Box>
+                  <FormLabel>Username</FormLabel>
+                  <Input
+                    name="username"
+                    value={formik.values.username}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    type="text"
+                  />
+                  {formik.touched.username && formik.errors.username && (
+                    <Text color="red">{formik.errors.username}</Text>
+                  )}
+                </Box>
+                <Box>
+                  <FormLabel>Password</FormLabel>
+                  <Input
+                    name="password"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    type="password"
+                  />
                   {formik.touched.password && formik.errors.password && (
-                  <Text color="red">{formik.errors.password}</Text>
-                )}
+                    <Text color="red">{formik.errors.password}</Text>
+                  )}
+                </Box>
+                <Button
+                  type="submit"
+                  colorScheme="cyan"
+                  color={"white"}
+                  // isDisabled={!username.length || !password.length}
+                >
+                  Login
+                </Button>
               </Box>
-              <Button
-                type="submit"
-                colorScheme="cyan"
-                color={"white"}
-                // isDisabled={!username.length || !password.length}
-              >
-                Login
-              </Button>
-            </Box>
-            <Text textAlign={"right"} marginTop={".4rem"}>
-              Don't have an account?
-              <Link color={"blue.400"} href="/signup">
-                {" "}
-                Singup
-              </Link>
-            </Text>
+              <Text textAlign={"right"} marginTop={".4rem"}>
+                Don't have an account?
+                <Link color={"blue.400"} href="/signup">
+                  {" "}
+                  Singup
+                </Link>
+              </Text>
             </form>
           </FormControl>
         </ModalBody>
