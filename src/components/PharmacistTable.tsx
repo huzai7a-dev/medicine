@@ -13,6 +13,7 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -24,13 +25,16 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { PaginationData, QueryType } from "../interfaces/common";
 import { Medicine } from "../interfaces/medicine";
 import UpdateMedicine from "./UpdateMedicine";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   medicines: Medicine[];
   searchFor?: string;
   showDelete: boolean;
+  isFetched: boolean;
+  pagination?: PaginationData;
+  milligramsList: string[];
   setShowDelete: (state: boolean) => void;
-  pagination: PaginationData;
   onPrev: () => void;
   onNext: () => void;
   searchMedicines: (query: QueryType) => void;
@@ -53,6 +57,8 @@ const PharmacistTable = ({
   searchFor,
   showDelete,
   pagination,
+  isFetched,
+  milligramsList,
   setShowDelete,
   onNext,
   onPrev,
@@ -70,10 +76,13 @@ const PharmacistTable = ({
   const [searchQuery, setSearchQuery] = useState<QueryType>({
     searchBy: "",
     value: "",
+    dosageForm: "",
   });
 
   const toast = useToast();
-  const disableSearch = !searchQuery.searchBy || !searchQuery.value;
+  const navigate = useNavigate();
+  const disableSearch =
+    !searchQuery.searchBy || !searchQuery.value || !searchQuery.dosageForm;
   const handleSearchBy = (searchBy: string) => {
     setSearchQuery({
       ...searchQuery,
@@ -121,7 +130,7 @@ const PharmacistTable = ({
     onSuccess: () => {
       toast({
         title: "delete Medicine",
-        description: "deleted succesfully.",
+        description: "deleted successfully.",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -142,6 +151,12 @@ const PharmacistTable = ({
     setList(medicines); // should be removed
   }, [medicines]);
 
+  const handleDosageForm = (value: string) => {
+    setSearchQuery({
+      ...searchQuery,
+      dosageForm: value,
+    });
+  };
   return (
     <>
       <Box p={4}>
@@ -162,6 +177,16 @@ const PharmacistTable = ({
               <option value="formula">Formula</option>
               <option value="company_name">Company Name</option>
             </Select>
+            <Select
+              flex={0.2}
+              marginLeft={2}
+              value={searchQuery.dosageForm}
+              onChange={(e) => handleDosageForm(e.target.value)}
+            >
+              <option value="none">None</option>
+              <option value="tablet">Tablets</option>
+              <option value="capsule">Capsules</option>
+            </Select>
             <Button
               colorScheme={disableSearch ? "blackAlpha" : "cyan"}
               color={"white"}
@@ -171,6 +196,11 @@ const PharmacistTable = ({
             >
               Search
             </Button>
+            {isFetched && !pagination && (
+              <Button marginLeft={2} onClick={() => navigate(0)}>
+                Clear
+              </Button>
+            )}
           </Flex>
           <Box
             width={"full"}
@@ -193,9 +223,9 @@ const PharmacistTable = ({
                   value={selectedMilligramFilter}
                 >
                   <option value="none">None</option>
-                  <option value="500mg">500mg</option>
-                  <option value="400mg">400mg</option>
-                  <option value="250mg">250mg</option>
+                  {milligramsList.sort().map((milligram) => (
+                    <option>{milligram}</option>
+                  ))}
                 </Select>
               </Flex>
               <Flex>
@@ -223,77 +253,88 @@ const PharmacistTable = ({
               </Heading>
             </Box>
           )}
-          <Table variant="striped" className="sticky-header">
-            <Thead>
-              <Tr fontSize={"small"}>
-                {headers.map((header) => (
-                  <Th key={header}>
-                    {header === "Price" ? (
-                      <>
-                        {header}
-                        <button onClick={onSort}>
-                          {sortOrder === "ascending" ? "▲" : "▼"}
-                        </button>
-                      </>
-                    ) : (
-                      header
-                    )}
-                  </Th>
-                ))}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {list
-                .filter((medicine) => {
-                  if (selectedMilligramFilter === "none") {
-                    return true;
-                  } else {
-                    return medicine.milligrams === selectedMilligramFilter;
-                  }
-                })
-                .map((medicine) => {
-                  return (
-                    <Tr fontSize={"small"} key={medicine.id}>
-                      <Td>{medicine.brand_name}</Td>
-                      <Td>{medicine.company_name}</Td>
-                      <Td>{medicine.dosage_form}</Td>
-                      <Td>{medicine.formula}</Td>
-                      <Td>{medicine.mrp}</Td>
-                      <Td>{medicine.milligrams}</Td>
-                      <Td>{medicine.pack_size}</Td>
-                      <Td>{medicine.reg_no}</Td>
-                      <Td>
-                        <Box display={"flex"} gap={2}>
-                          <IconButton
-                            aria-label="Updated Medicine"
-                            onClick={() => handleEdit(medicine)}
-                            icon={<EditIcon />}
-                          />
-                          {medicine.is_public && (
+          {!list || list.length === 0 ? (
+            <Text mt={"3"} textAlign="center" fontSize={"3xl"}>
+              No Medicine Found!
+            </Text>
+          ) : (
+            <Table variant="striped" className="sticky-header">
+              <Thead>
+                <Tr fontSize={"small"}>
+                  {headers.map((header) => (
+                    <Th key={header}>
+                      {header === "Price" ? (
+                        <>
+                          {header}
+                          <button onClick={onSort}>
+                            {sortOrder === "ascending" ? "▲" : "▼"}
+                          </button>
+                        </>
+                      ) : (
+                        header
+                      )}
+                    </Th>
+                  ))}
+                </Tr>
+              </Thead>
+              <Tbody>
+                {list
+                  .filter((medicine) => {
+                    if (selectedMilligramFilter === "none") {
+                      return true;
+                    } else {
+                      return (
+                        medicine.milligrams?.split(" ").join("") ===
+                        selectedMilligramFilter.split(" ").join("")
+                      );
+                    }
+                  })
+                  .map((medicine) => {
+                    return (
+                      <Tr fontSize={"small"} key={medicine.id}>
+                        <Td>{medicine.brand_name}</Td>
+                        <Td>{medicine.company_name}</Td>
+                        <Td>{medicine.dosage_form}</Td>
+                        <Td>{medicine.formula}</Td>
+                        <Td>{medicine.mrp}</Td>
+                        <Td>{medicine.milligrams?.split(" ").join("")}</Td>
+                        <Td>{medicine.pack_size}</Td>
+                        <Td>{medicine.reg_no}</Td>
+                        <Td>
+                          <Box display={"flex"} gap={2}>
                             <IconButton
-                              aria-label="Delete Medicine"
-                              icon={
-                                <DeleteIcon
-                                  color={"red"}
-                                  onClick={() => handleDelete(medicine.id)}
-                                />
-                              }
+                              aria-label="Updated Medicine"
+                              onClick={() => handleEdit(medicine)}
+                              icon={<EditIcon />}
                             />
-                          )}
-                        </Box>
-                      </Td>
-                    </Tr>
-                  );
-                })}
-            </Tbody>
-          </Table>
-        </TableContainer>
-        <Flex justifyContent="center" marginTop={2} gap={4}>
-          {pagination!.currentPage > 1 && (
-            <Button onClick={onPrev}>Previous</Button>
+                            {medicine.is_public && (
+                              <IconButton
+                                aria-label="Delete Medicine"
+                                icon={
+                                  <DeleteIcon
+                                    color={"red"}
+                                    onClick={() => handleDelete(medicine.id)}
+                                  />
+                                }
+                              />
+                            )}
+                          </Box>
+                        </Td>
+                      </Tr>
+                    );
+                  })}
+              </Tbody>
+            </Table>
           )}
-          {pagination!.hasMore && <Button onClick={onNext}>Next</Button>}
-        </Flex>
+        </TableContainer>
+        {pagination && (
+          <Flex justifyContent="center" marginTop={2} gap={4}>
+            {pagination!.currentPage > 1 && (
+              <Button onClick={onPrev}>Previous</Button>
+            )}
+            {pagination!.hasMore && <Button onClick={onNext}>Next</Button>}
+          </Flex>
+        )}
       </Box>
       {selectedMedicine && (
         <UpdateMedicine

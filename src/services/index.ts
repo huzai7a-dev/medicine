@@ -20,10 +20,12 @@ const searchByCriteria = async (
   }
 };
 
-const searchPrescription = async (brandNames: string[]) => {
+const searchPrescription = async (
+  search: { brandName: string; dosageForm: string }[]
+) => {
   try {
     const response = await apiClient.post("/search-prescription", {
-      brandNames: brandNames,
+      searchQuery: search,
     });
     return response.data;
   } catch (error) {
@@ -61,17 +63,15 @@ const getAllPharmacistMedicines = async (
 ) => {
   let url = `/get-full-medicines?page=${page}&pageSize=${pageSize}&deleted=${deleted}`;
   if (query?.searchBy) {
-    url = `/get-full-medicines?page=${page}&pageSize=${pageSize}&deleted=${deleted}&findBy=${query.searchBy}&value=${query.value}`;
+    url = `/get-full-medicines?page=${page}&pageSize=${pageSize}&deleted=${deleted}&findBy=${query.searchBy}&value=${query.value}&dosageForm=${query.dosageForm}`;
   }
   const response = await apiClient.get(url);
   return response.data;
 };
 
-const updateMed = async ( data: Medicine): Promise<any> => {
-
-    const response = await apiClient.put(`/medicine/${data.id}`, data);
-    return response.data;
- 
+const updateMed = async (data: Medicine) => {
+  const response = await apiClient.put(`/medicine/${data.id}`, data);
+  return response.data;
 };
 
 const deleteMedicine = async (id: number | string) => {
@@ -111,5 +111,5 @@ export {
   deleteMedicine,
   signupUser,
   loginUser,
-   updateMed,
+  updateMed,
 };

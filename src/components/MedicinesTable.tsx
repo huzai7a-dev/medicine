@@ -72,18 +72,21 @@ const MedicinesTable = ({
     setList(medicines); // should be removed
   }, [medicines]);
 
-  const sortByAlphabets = (a: Medicine, b: Medicine, sortFormula: boolean) => {
-    if (!sortFormula) return 0;
-    if (a?.formula && b?.formula) {
-      if (a?.formula < b?.formula) {
-        return -1;
+  useEffect(() => {
+    let sortedList = list;
+    sortedList = list.sort((a, b) => {
+      if (a.formula && b.formula) {
+        if (sortFormula) {
+          return a.formula.localeCompare(b.formula);
+        } else {
+          return b.formula.localeCompare(a.formula);
+        }
+      } else {
+        return 0;
       }
-      if (a?.formula > b?.formula) {
-        return 1;
-      }
-    }
-    return 0;
-  };
+    });
+    setList(sortedList);
+  }, [list, sortFormula]);
 
   const RenderHeader = ({ header }: { header: string }) => {
     if (header === "Price") {
@@ -101,7 +104,7 @@ const MedicinesTable = ({
         <>
           {header}
           <button onClick={() => setSorFormula(!sortFormula)}>
-            {sortFormula ? "▲" : "▼"}
+            {sortFormula ? "▼" : "▲"}
           </button>
         </>
       );
@@ -151,7 +154,6 @@ const MedicinesTable = ({
           </Thead>
           <Tbody>
             {list
-              .sort((a, b) => sortByAlphabets(a, b, sortFormula))
               .filter((medicine) => {
                 if (selectedMilligramFilter === "none") {
                   return true;

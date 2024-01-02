@@ -6,7 +6,6 @@ export interface PaginationData {
   hasMore: boolean;
 }
 
-
 export interface UserData {
   address: string | null;
   details: string | null;
@@ -20,4 +19,5 @@ export interface UserData {
 export interface QueryType {
   searchBy: string;
   value: string;
+  dosageForm: string;
 }
