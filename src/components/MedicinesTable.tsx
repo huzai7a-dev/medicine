@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -8,18 +9,18 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
 import { Medicine } from "../interfaces/medicine";
-import { useEffect, useState } from "react";
 import { PaginationData } from "../interfaces/common";
 
 interface Props {
   medicines: Medicine[];
   searchFor: string;
-  hasPagination?: boolean;
+  milligramsList?: string[];
   pagination?: PaginationData;
   onNext?: () => void;
   onPrev?: () => void;
@@ -39,8 +40,8 @@ const headers = [
 const MedicinesTable = ({
   medicines,
   searchFor,
-  hasPagination = false,
   pagination,
+  milligramsList,
   onNext,
   onPrev,
 }: Props) => {
@@ -69,7 +70,7 @@ const MedicinesTable = ({
   };
 
   useEffect(() => {
-    setList(medicines); // should be removed
+    setList(medicines);
   }, [medicines]);
 
   useEffect(() => {
@@ -121,20 +122,22 @@ const MedicinesTable = ({
         style={{ maxHeight: "calc(100vh - 150px)", minHeight: "auto" }}
         overflowY={"auto"}
       >
-        <Flex my={4} alignItems={"center"} justifyContent={"flex-end"}>
-          <p>Milligrams</p>
-          <Select
-            ml={2}
-            width="auto"
-            onChange={(e) => setSelectedMilligramFilter(e.target.value)}
-            value={selectedMilligramFilter}
-          >
-            <option value="none">None</option>
-            <option value="500mg">500mg</option>
-            <option value="400mg">400mg</option>
-            <option value="250mg">250mg</option>
-          </Select>
-        </Flex>
+        {milligramsList && milligramsList?.length > 0 && (
+          <Flex my={4} alignItems={"center"} justifyContent={"flex-end"}>
+            <p>Milligrams</p>
+            <Select
+              ml={2}
+              width="auto"
+              onChange={(e) => setSelectedMilligramFilter(e.target.value)}
+              value={selectedMilligramFilter}
+            >
+              <option value="none">None</option>
+              {milligramsList?.sort()?.map((milligram) => (
+                <option value={milligram}>{milligram}</option>
+              ))}
+            </Select>
+          </Flex>
+        )}
         {searchFor && (
           <Box display={"flex"} justifyContent={"space-between"}>
             <Heading marginY={3} fontSize={"xl"} as={"h2"}>
@@ -142,44 +145,55 @@ const MedicinesTable = ({
             </Heading>
           </Box>
         )}
-        <Table variant="striped" className="sticky-header">
-          <Thead>
-            <Tr>
-              {headers.map((header) => (
-                <Th key={header}>
-                  <RenderHeader header={header} />
-                </Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {list
-              .filter((medicine) => {
-                if (selectedMilligramFilter === "none") {
-                  return true;
-                } else {
-                  return medicine.milligrams === selectedMilligramFilter;
-                }
-              })
-              .map((medicine) => {
-                return (
-                  <Tr key={medicine.id}>
-                    <Td>{medicine.reg_no}</Td>
-                    <Td>{medicine.brand_name}</Td>
-                    <Td>{medicine.company_name}</Td>
-                    <Td>{medicine.dosage_form}</Td>
-                    <Td>{medicine.formula}</Td>
-                    <Td>{medicine.mrp}</Td>
-                    <Td>{medicine.milligrams}</Td>
-                    <Td>{medicine.pack_size}</Td>
-                  </Tr>
-                );
-              })}
-          </Tbody>
-        </Table>
+        {!list || list.length === 0 ? (
+          <Text textAlign={"center"} fontSize={"3xl"}>
+            No Medicine Found!
+          </Text>
+        ) : (
+          <Table variant="striped" className="sticky-header">
+            <Thead>
+              <Tr>
+                {headers.map((header) => (
+                  <Th key={header}>
+                    <RenderHeader header={header} />
+                  </Th>
+                ))}
+              </Tr>
+            </Thead>
+            <Tbody>
+              {list
+                .filter((medicine) => {
+                  if (selectedMilligramFilter === "none") {
+                    return true;
+                  } else {
+                    return (
+                      medicine.milligrams
+                        ?.split(" ")
+                        ?.join("")
+                        ?.replace(",", "") === selectedMilligramFilter
+                    );
+                  }
+                })
+                .map((medicine) => {
+                  return (
+                    <Tr key={medicine.id}>
+                      <Td>{medicine.reg_no}</Td>
+                      <Td>{medicine.brand_name}</Td>
+                      <Td>{medicine.company_name}</Td>
+                      <Td>{medicine.dosage_form}</Td>
+                      <Td>{medicine.formula}</Td>
+                      <Td>{medicine.mrp}</Td>
+                      <Td>{medicine.milligrams}</Td>
+                      <Td>{medicine.pack_size}</Td>
+                    </Tr>
+                  );
+                })}
+            </Tbody>
+          </Table>
+        )}
       </TableContainer>
 
-      {hasPagination && (
+      {pagination && pagination!.currentPage && (
         <Flex justifyContent="center" marginTop={2} gap={4}>
           {pagination!.currentPage > 1 && (
             <Button onClick={onPrev}>Previous</Button>

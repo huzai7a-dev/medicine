@@ -21,4 +21,5 @@ export interface Medicine {
 export interface PaginatedMedicines {
   data: Medicine[];
   pagination: PaginationData;
+  milligramsList: string[];
 }

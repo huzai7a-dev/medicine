@@ -8,7 +8,7 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { searchByCriteria } from "../services";
 import { useMedicineStore } from "../store/medicine";
 import { useNavigate } from "react-router-dom";
@@ -36,7 +36,6 @@ const SearchBy = () => {
   const [dosageForm, setDosageForm] = useState("");
   const loadMedicines = useMedicineStore((store) => store.loadMedicines);
   const setLoading = useLoader((store) => store.setLoading);
-
   const navigate = useNavigate();
 
   const findMedicine = async () => {
@@ -44,7 +43,7 @@ const SearchBy = () => {
       setLoading(true);
       navigate("/search-by");
       const response = await searchByCriteria(findBy, searchText, dosageForm);
-      loadMedicines(response.data, response.search);
+      loadMedicines(response.data, response.search, response.milligramsList);
     } catch (error) {
       console.log(error);
     } finally {
@@ -102,6 +101,7 @@ const SearchBy = () => {
           <IconButton
             onClick={findMedicine}
             aria-label="Search"
+            isDisabled={!findBy || !searchText || !dosageForm}
             icon={<SearchIcon />}
           />
         </Box>
