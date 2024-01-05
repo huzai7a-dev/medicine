@@ -9,7 +9,11 @@ import { useLoader } from "../store/app";
 const SearchBy = () => {
   const isLoading = useLoader((store) => store.isLoading);
   const [page, setPage] = useState(1);
-  const { searchFor, medicines } = useMedicineStore((store) => store);
+  const {
+    searchFor,
+    medicines,
+    milligramsList: searchMilligramsList,
+  } = useMedicineStore((store) => store);
   const { data: allMedicines, isLoading: isAllMedicineLoading } = useQuery({
     queryFn: () => getAllMedicines(page),
     queryKey: ["medicine", page],
@@ -26,7 +30,11 @@ const SearchBy = () => {
   if (isLoading || isAllMedicineLoading) return <Loader />;
   return (
     <MedicinesTable
-      milligramsList={allMedicines?.milligramsList || []}
+      milligramsList={
+        searchFor.length > 0
+          ? searchMilligramsList || []
+          : allMedicines?.milligramsList || []
+      }
       medicines={searchFor.length > 0 ? medicines : allMedicines?.data || []}
       searchFor={searchFor}
       pagination={!searchFor ? allMedicines?.pagination : undefined}
