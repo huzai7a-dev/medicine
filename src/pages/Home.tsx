@@ -56,9 +56,9 @@ const HomePage = () => {
             Institute of Business Administration (IBA) Karachi
           </Text>
           , under the guidance of <Text as={"b"}>Dr. Waqas Mahmood</Text>, we're
-          proud to introduce our groundbreaking project:{" "}
-          <Text as={"b"}>The Medicine Substitute System</Text>. This initiative
-          is more than just a technical achievement; it's a step towards making
+          proud to introduce our groundbreaking project: The{" "}
+          <Text as={"b"}>Medicine Substitute System</Text>. This initiative is
+          more than just a technical achievement; it's a step towards making
           healthcare more accessible and affordable for everyone.
         </Text>
         <Divider my={1} />

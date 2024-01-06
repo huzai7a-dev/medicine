@@ -60,7 +60,7 @@ const Signup = () => {
           <form onSubmit={formik.handleSubmit}>
             <VStack spacing={4}>
               <FormControl>
-                <FormLabel>Signup As</FormLabel>
+                <FormLabel>Sign up As</FormLabel>
                 <Input value={"PUBLIC"} isDisabled={true} name="public" />
               </FormControl>
               <FormControl id="name">
