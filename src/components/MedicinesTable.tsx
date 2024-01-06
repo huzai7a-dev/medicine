@@ -30,11 +30,12 @@ const headers = [
   "Reg No.",
   "Brand",
   "Company",
-  "Dosage form",
   "Formula",
   "Price",
-  "Milligrams",
+  "Efficacy",
   "Pack Size",
+  "Milligrams",
+  "Dosage form",
 ];
 
 const MedicinesTable = ({
@@ -180,11 +181,12 @@ const MedicinesTable = ({
                       <Td>{medicine.reg_no}</Td>
                       <Td>{medicine.brand_name}</Td>
                       <Td>{medicine.company_name}</Td>
-                      <Td>{medicine.dosage_form}</Td>
                       <Td>{medicine.formula}</Td>
                       <Td>{medicine.mrp}</Td>
-                      <Td>{medicine.milligrams}</Td>
+                      <Td>{medicine.efficacy}</Td>
                       <Td>{medicine.pack_size}</Td>
+                      <Td>{medicine.milligrams}</Td>
+                      <Td>{medicine.dosage_form}</Td>
                     </Tr>
                   );
                 })}

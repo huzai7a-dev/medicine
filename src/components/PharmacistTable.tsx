@@ -41,14 +41,15 @@ interface Props {
 }
 
 const headers = [
+  "Reg No.",
   "Brand",
   "Company",
-  "Dosage form",
   "Formula",
   "Price",
-  "Milligrams",
+  "Efficacy",
   "Pack Size",
-  "Reg No.",
+  "Milligrams",
+  "Dosage form",
   "Actions",
 ];
 
@@ -292,14 +293,15 @@ const PharmacistTable = ({
                   .map((medicine) => {
                     return (
                       <Tr fontSize={"small"} key={medicine.id}>
+                        <Td>{medicine.reg_no}</Td>
                         <Td>{medicine.brand_name}</Td>
                         <Td>{medicine.company_name}</Td>
-                        <Td>{medicine.dosage_form}</Td>
                         <Td>{medicine.formula}</Td>
                         <Td>{medicine.mrp}</Td>
-                        <Td>{medicine.milligrams?.split(" ").join("")}</Td>
+                        <Td>{medicine.efficacy}</Td>
                         <Td>{medicine.pack_size}</Td>
-                        <Td>{medicine.reg_no}</Td>
+                        <Td>{medicine.milligrams?.split(" ").join("")}</Td>
+                        <Td>{medicine.dosage_form}</Td>
                         <Td>
                           <Box display={"flex"} gap={2}>
                             <IconButton
