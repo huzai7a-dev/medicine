@@ -18,6 +18,7 @@ const Pharmacist = () => {
       getAllPharmacistMedicines(page, 20, showDeleted, searchQuery),
     queryKey: ["medicine", page, showDeleted, searchQuery],
     placeholderData: keepPreviousData,
+    refetchOnMount: true,
   });
   const handleNext = () => {
     setPage(page + 1);
