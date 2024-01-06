@@ -78,6 +78,7 @@ const Header = () => {
         )}
       </Box>
       {authToken ? (
+        <div style={{zIndex : 3}}>
         <Menu>
         <MenuButton as={Button} rightIcon={<Avatar bg='red.500' size={"sm"} icon={<AiOutlineUser fontSize='1rem' />} />}>
           Sign in as {authUser?.type}
@@ -94,6 +95,7 @@ const Header = () => {
           <MenuItem as={Button} onClick={handleLogout}>Logout</MenuItem>
         </MenuList>
       </Menu>
+        </div>
        
       ) : 
       (       
