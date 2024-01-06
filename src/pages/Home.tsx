@@ -4,7 +4,6 @@ import {
   Heading,
   Text,
   VStack,
-  Button,
   useColorModeValue,
   Icon,
   Divider,
@@ -52,15 +51,19 @@ const HomePage = () => {
         color={textColor}
       >
         <Text fontSize="md">
-          At IBA Karachi, under the guidance of Dr. Waqas Mehmood, we're proud
-          to introduce our groundbreaking project: the Medicine Substitute
-          System. This initiative is more than just a technical achievement;
-          it's a step towards making healthcare more accessible and affordable
-          for everyone.
+          At{" "}
+          <Text as={"b"}>
+            Institute of Business Administration (IBA) Karachi
+          </Text>
+          , under the guidance of <Text as={"b"}>Dr. Waqas Mahmood</Text>, we're
+          proud to introduce our groundbreaking project:{" "}
+          <Text as={"b"}>The Medicine Substitute System</Text>. This initiative
+          is more than just a technical achievement; it's a step towards making
+          healthcare more accessible and affordable for everyone.
         </Text>
-        <Divider my={5} />
+        <Divider my={1} />
         <Text fontSize="md">
-          In an era where medical expenses are constantly rising, our system
+          In an era whee medical expenses are constantly rising, our system
           offers a beacon of hope. It's designed to help patients find
           cost-effective substitutes for expensive medications, ensuring that
           financial constraints don't compromise one's health. Our focus is on
@@ -69,14 +72,14 @@ const HomePage = () => {
         </Text>
         <Text fontSize="md">
           Join us on this journey as we strive to make a difference in the lives
-          of many, one substitute medication at a time. Stay tuned for more
+          of many, multiple substitute medication at a time. Stay tuned for more
           updates and insights into how we're transforming the landscape of
           healthcare accessibility in Pakistan.
         </Text>
         <Box textAlign="center" pt={5}>
-          <Button color={"white"} colorScheme="cyan" size="lg">
-            Learn More
-          </Button>
+          <Text as="b">
+            Copyright <span>&#169;</span> IBA 2024
+          </Text>
         </Box>
       </VStack>
     </Container>
