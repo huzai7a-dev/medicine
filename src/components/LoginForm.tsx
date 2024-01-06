@@ -113,7 +113,7 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
                 Don't have an account?
                 <Link color={"blue.400"} href="/signup">
                   {" "}
-                  Singup
+                  Sign up
                 </Link>
               </Text>
             </form>

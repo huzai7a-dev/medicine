@@ -80,6 +80,7 @@ const Header = () => {
       {authToken ? (
         <Menu>
           <MenuButton
+            textTransform={"uppercase"}
             as={Button}
             rightIcon={
               <Avatar
@@ -89,7 +90,7 @@ const Header = () => {
               />
             }
           >
-            Sign in as {authUser?.type}
+            {authUser?.type}
           </MenuButton>
           <MenuList>
             <MenuItem>{authUser?.username}</MenuItem>
