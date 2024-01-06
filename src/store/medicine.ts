@@ -4,7 +4,12 @@ import { Medicine } from "../interfaces/medicine";
 interface MedicineState {
   medicines: Medicine[] | [];
   searchFor: string;
-  loadMedicines: (medicines: Medicine[], searchFor: string) => void;
+  milligramsList: string[];
+  loadMedicines: (
+    medicines: Medicine[],
+    searchFor: string,
+    milligramsList: string[]
+  ) => void;
 }
 
 interface Group {
@@ -19,8 +24,12 @@ interface MedicineGroup {
 const useMedicineStore = create<MedicineState>()((set) => ({
   medicines: [],
   searchFor: "",
-  loadMedicines: (medicines: Medicine[], searchFor: string) =>
-    set(() => ({ medicines, searchFor })),
+  milligramsList: [],
+  loadMedicines: (
+    medicines: Medicine[],
+    searchFor: string,
+    milligramsList: string[]
+  ) => set(() => ({ medicines, searchFor, milligramsList })),
 }));
 
 const useMedicineGroups = create<MedicineGroup>()((set) => ({

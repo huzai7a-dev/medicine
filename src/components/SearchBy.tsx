@@ -8,7 +8,7 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { searchByCriteria } from "../services";
 import { useMedicineStore } from "../store/medicine";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ const searches = [
     title: "Company",
   },
   {
-    value: "formulation",
+    value: "formula",
     title: "Generics",
   },
 ];
@@ -36,7 +36,6 @@ const SearchBy = () => {
   const [dosageForm, setDosageForm] = useState("");
   const loadMedicines = useMedicineStore((store) => store.loadMedicines);
   const setLoading = useLoader((store) => store.setLoading);
-
   const navigate = useNavigate();
 
   const findMedicine = async () => {
@@ -44,7 +43,7 @@ const SearchBy = () => {
       setLoading(true);
       navigate("/search-by");
       const response = await searchByCriteria(findBy, searchText, dosageForm);
-      loadMedicines(response.data, response.search);
+      loadMedicines(response.data, response.search, response.milligramsList);
     } catch (error) {
       console.log(error);
     } finally {
@@ -52,6 +51,15 @@ const SearchBy = () => {
     }
   };
 
+  const handleSelectDosageForm = (value: string) => {
+    if (value === "none") {
+      setFindBy("");
+      setSearchText("");
+      navigate(0);
+      return;
+    }
+    setDosageForm(value);
+  };
   return (
     <Card height={140}>
       <CardHeader py={2}>
@@ -61,7 +69,12 @@ const SearchBy = () => {
       </CardHeader>
       <CardBody py={0}>
         <Select
-          onChange={(e) => setFindBy(e.target.value)}
+          value={findBy}
+          onChange={(e) => {
+            setDosageForm("");
+            setSearchText("");
+            setFindBy(e.target.value);
+          }}
           placeholder="Search By"
         >
           {searches.map((search) => (
@@ -78,16 +91,17 @@ const SearchBy = () => {
             onChange={(e) => setSearchText(e.target.value)}
           />
           <Select
-            onChange={(e) => setDosageForm(e.target.value)}
-            placeholder="Select option"
+            value={dosageForm}
+            onChange={(e) => handleSelectDosageForm(e.target.value)}
           >
+            <option value="none">None</option>
             <option value="capsule">Capsule</option>
             <option value="tablet">Tablet</option>
-            <option value="injection">Injection</option>
           </Select>
           <IconButton
             onClick={findMedicine}
             aria-label="Search"
+            isDisabled={!findBy || !searchText || !dosageForm}
             icon={<SearchIcon />}
           />
         </Box>

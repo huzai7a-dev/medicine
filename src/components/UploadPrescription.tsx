@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Image, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Input, Text } from "@chakra-ui/react";
 import { AiFillCamera } from "react-icons/ai";
 
 import { uploadPrescription } from "../services";
@@ -67,9 +67,20 @@ const UploadPrescription = () => {
           </>
         )}
       </Box>
-      <Button width={"full"} marginTop={4} onClick={handleSearch}>
-        Upload
-      </Button>
+      <Flex gap={2} marginTop={4} alignItems={"center"}>
+        <Button isDisabled={!image} width={"full"} onClick={handleSearch}>
+          Upload
+        </Button>
+        {image && (
+          <Button
+            onClick={() => setImage(undefined)}
+            width={"full"}
+            colorScheme="red"
+          >
+            Clear
+          </Button>
+        )}
+      </Flex>
     </div>
   );
 };

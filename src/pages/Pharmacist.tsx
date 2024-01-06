@@ -9,11 +9,16 @@ const Pharmacist = () => {
   const [page, setPage] = useState(1);
   const [showDeleted, setShowDelete] = useState(false);
   const [searchQuery, setSearchQuery] = useState<QueryType>({} as QueryType);
-  const { data: medicines, isLoading } = useQuery({
+  const {
+    data: medicines,
+    isLoading,
+    isFetched,
+  } = useQuery({
     queryFn: () =>
       getAllPharmacistMedicines(page, 20, showDeleted, searchQuery),
     queryKey: ["medicine", page, showDeleted, searchQuery],
     placeholderData: keepPreviousData,
+    refetchOnMount: true,
   });
   const handleNext = () => {
     setPage(page + 1);
@@ -29,9 +34,11 @@ const Pharmacist = () => {
   if (isLoading) return <Loader />;
   return (
     <PharmacistTable
-      pagination={medicines.pagination}
+      pagination={medicines?.pagination}
       showDelete={showDeleted}
       medicines={medicines.data}
+      milligramsList={medicines?.milligramsList}
+      isFetched={isFetched}
       onPrev={handlePrev}
       onNext={handleNext}
       setShowDelete={setShowDelete}

@@ -22,15 +22,15 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
   const navigate = useNavigate();
-  
-  const {authUser, storeToken, authToken  } = useAuthStore();
+
+  const { authUser, storeToken, authToken, storeUser } = useAuthStore();
 
   const handleLogout = () => {
-    sessionStorage.removeItem("auth-storage");
+    sessionStorage.clear();
     storeToken("");
-    navigate('/signup')
-  }
- 
+    storeUser(null);
+    navigate("/");
+  };
 
   return (
     <HStack display={"flex"} shadow={"base"} px={4} height={"100%"}>
@@ -80,25 +80,32 @@ const Header = () => {
       {authToken ? (
         <div style={{zIndex : 3}}>
         <Menu>
-        <MenuButton as={Button} rightIcon={<Avatar bg='red.500' size={"sm"} icon={<AiOutlineUser fontSize='1rem' />} />}>
-          Sign in as {authUser?.type}
-        </MenuButton>
-        <MenuList>
-          <MenuItem>{authUser?.username}</MenuItem>
-          {authUser?.address && 
-          <MenuItem>{authUser.address}</MenuItem>
-          }
-          {authUser?.details &&
-          <MenuItem>{authUser?.details}</MenuItem>
-          }
-          <Divider/>
-          <MenuItem as={Button} onClick={handleLogout}>Logout</MenuItem>
-        </MenuList>
-      </Menu>
-        </div>
-       
-      ) : 
-      (       
+        <MenuButton
+            textTransform={"uppercase"}
+            as={Button}
+            rightIcon={
+              <Avatar
+                bg="red.500"
+                size={"sm"}
+                icon={<AiOutlineUser fontSize="1rem" />}
+              />
+            }
+          >
+            {authUser?.type}
+          </MenuButton>
+          <MenuList>
+            <MenuItem>{authUser?.username}</MenuItem>
+            {authUser?.address && <MenuItem>{authUser.address}</MenuItem>}
+            {authUser?.details && <MenuItem>{authUser?.details}</MenuItem>}
+            <Divider />
+            <MenuItem as={Button} onClick={handleLogout}>
+              Logout
+            </MenuItem>
+          </MenuList>
+        </Menu>
+           </div>
+      ) : (
+
         <Button
           colorScheme="cyan"
           display={"flex"}
@@ -107,9 +114,7 @@ const Header = () => {
         >
           Login
         </Button>
-      )
-
-      }
+      )}
       <LoginForm isOpen={showLogin} onClose={() => setShowLogin(false)} />
     </HStack>
   );

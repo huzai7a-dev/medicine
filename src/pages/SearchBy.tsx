@@ -1,20 +1,31 @@
 import MedicinesTable from "../components/MedicinesTable";
 import { useMedicineStore } from "../store/medicine";
 import Loader from "../components/Loader";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getAllMedicines } from "../services";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoader } from "../store/app";
 
 const SearchBy = () => {
   const isLoading = useLoader((store) => store.isLoading);
   const [page, setPage] = useState(1);
-  const { searchFor, medicines } = useMedicineStore((store) => store);
+  const {
+    searchFor,
+    medicines,
+    milligramsList: searchMilligramsList,
+    loadMedicines,
+  } = useMedicineStore((store) => store);
   const { data: allMedicines, isLoading: isAllMedicineLoading } = useQuery({
     queryFn: () => getAllMedicines(page),
     queryKey: ["medicine", page],
-    placeholderData: keepPreviousData,
+    refetchOnMount: true,
   });
+
+  useEffect(() => {
+    return () => {
+      loadMedicines([], "", []);
+    };
+  }, [loadMedicines]);
 
   const handleNextPage = () => {
     setPage(page + 1);
@@ -26,14 +37,20 @@ const SearchBy = () => {
 
   if (isLoading || isAllMedicineLoading) return <Loader />;
 
-  const hasNoSearchResult = medicines.length < 1; // if user has not searched any thing this will be true then all the medicines will be show
+  const renderMilligramsList =
+    searchFor.length > 0
+      ? searchMilligramsList || []
+      : allMedicines?.milligramsList || [];
+
+  const renderMedicines =
+    searchFor.length > 0 ? medicines : allMedicines?.data || [];
 
   return (
     <MedicinesTable
-      medicines={hasNoSearchResult ? allMedicines?.data || [] : medicines}
+      milligramsList={renderMilligramsList}
+      medicines={renderMedicines}
       searchFor={searchFor}
-      hasPagination={hasNoSearchResult}
-      pagination={allMedicines?.pagination}
+      pagination={!searchFor ? allMedicines?.pagination : undefined}
       onNext={handleNextPage}
       onPrev={handlePrev}
     />

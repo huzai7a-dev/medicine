@@ -1,14 +1,20 @@
+import { useEffect } from "react";
 import Loader from "../components/Loader";
 import MedicinesTable from "../components/MedicinesTable";
 import { useLoader } from "../store/app";
 import { useMedicineGroups } from "../store/medicine";
 
 const SearchPrescription = () => {
-  const { groups } = useMedicineGroups((state) => ({
+  const { groups, loadGroups } = useMedicineGroups((state) => ({
     groups: state.groups,
     loadGroups: state.loadGroups,
   }));
 
+  useEffect(() => {
+    return () => {
+      loadGroups([]);
+    };
+  }, [loadGroups]);
   const isLoading = useLoader((store) => store.isLoading);
   if (isLoading)
     return (
