@@ -78,8 +78,9 @@ const Header = () => {
         )}
       </Box>
       {authToken ? (
+        <div style={{zIndex : 3}}>
         <Menu>
-          <MenuButton
+        <MenuButton
             textTransform={"uppercase"}
             as={Button}
             rightIcon={
@@ -102,7 +103,9 @@ const Header = () => {
             </MenuItem>
           </MenuList>
         </Menu>
+           </div>
       ) : (
+
         <Button
           colorScheme="cyan"
           display={"flex"}
