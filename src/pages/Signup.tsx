@@ -14,9 +14,11 @@ import { signupUser } from "../services";
 import { useToast } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { SignupSchema, SignupInitialValues } from "../lib/validationSchema";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const toast = useToast();
+  const navigate = useNavigate();
   const { mutate: signup } = useMutation({
     mutationKey: ["signup"],
     mutationFn: signupUser,
@@ -36,12 +38,15 @@ const Signup = () => {
     },
     onSuccess: () => {
       toast({
-        title: "Signup Error",
-        description: "sign in successfully.",
+        title: "Signup Successful",
+        description: "Sign in successfully.",
         status: "success",
         duration: 5000,
         isClosable: true,
       });
+      setInterval(() => {
+        navigate("/");
+      }, 3000);
     },
   });
 
