@@ -10,13 +10,17 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { MdLocalPharmacy } from "react-icons/md";
+import { COLOR_SCHEME } from "../constants/theme";
 
 const HomePage = () => {
   // Accessing theme tokens for consistent styling
-  const [cyan600, cyan300] = useToken("colors", ["cyan.600", "cyan.300"]);
+  const [green600, green300] = useToken("colors", [
+    `${COLOR_SCHEME}.600`,
+    `${COLOR_SCHEME}.300`,
+  ]);
 
   // Background gradient
-  const bgGradient = `linear(to-l, ${cyan600}, ${cyan300})`;
+  const bgGradient = `linear(to-l, ${green600}, ${green300})`;
 
   const textColor = useColorModeValue("gray.700", "gray.200");
 

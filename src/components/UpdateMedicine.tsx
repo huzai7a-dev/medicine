@@ -16,6 +16,7 @@ import { Medicine } from "../interfaces/medicine";
 import { updateMed } from "../services";
 import { capitalizeFirstLetter } from "../lib/utils";
 import { useNavigate } from "react-router-dom";
+import { COLOR_SCHEME } from "../constants/theme";
 
 interface Props {
   isOpen: boolean;
@@ -115,7 +116,11 @@ const UpdateMedicine = ({ isOpen, onClose, data }: Props) => {
                   />
                 </Box>
               ))}
-              <Button onClick={handleUpdate} colorScheme="cyan" color={"white"}>
+              <Button
+                onClick={handleUpdate}
+                colorScheme={COLOR_SCHEME}
+                color={"white"}
+              >
                 Update
               </Button>
             </Box>

@@ -26,6 +26,7 @@ import { PaginationData, QueryType } from "../interfaces/common";
 import { Medicine } from "../interfaces/medicine";
 import UpdateMedicine from "./UpdateMedicine";
 import { useNavigate } from "react-router-dom";
+import { COLOR_SCHEME } from "../constants/theme";
 
 interface Props {
   medicines: Medicine[];
@@ -189,7 +190,7 @@ const PharmacistTable = ({
               <option value="capsule">Capsules</option>
             </Select>
             <Button
-              colorScheme={disableSearch ? "blackAlpha" : "cyan"}
+              colorScheme={disableSearch ? "blackAlpha" : COLOR_SCHEME}
               color={"white"}
               isDisabled={disableSearch}
               onClick={() => searchMedicines(searchQuery)}

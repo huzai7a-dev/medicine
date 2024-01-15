@@ -14,7 +14,7 @@ const Layout = () => {
       gridTemplateColumns={"1fr"}
       height={"100vh"}
       gap={1}
-      bg={"gray.50"}
+      bg={"green.50"}
     >
       <GridItem area={"header"}>
         <Header />

@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { loginSchema, loginInitialValues } from "../lib/validationSchema";
+import { COLOR_SCHEME } from "../constants/theme";
 
 interface Props {
   isOpen: boolean;
@@ -102,7 +103,7 @@ const LoginForm = ({ isOpen, onClose }: Props) => {
                 </Box>
                 <Button
                   type="submit"
-                  colorScheme="cyan"
+                  colorScheme={COLOR_SCHEME}
                   color={"white"}
                   // isDisabled={!username.length || !password.length}
                 >

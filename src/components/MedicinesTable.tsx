@@ -14,14 +14,17 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { Medicine } from "../interfaces/medicine";
+import { Medicine, MedicineSuggest } from "../interfaces/medicine";
 import { PaginationData } from "../interfaces/common";
+import { Link } from "react-router-dom";
+import { COLOR_SCHEME } from "../constants/theme";
 
 interface Props {
   medicines: Medicine[];
   searchFor: string;
   milligramsList?: string[];
   pagination?: PaginationData;
+  suggest?: MedicineSuggest;
   onNext?: () => void;
   onPrev?: () => void;
 }
@@ -43,6 +46,7 @@ const MedicinesTable = ({
   searchFor,
   pagination,
   milligramsList,
+  suggest,
   onNext,
   onPrev,
 }: Props) => {
@@ -115,6 +119,17 @@ const MedicinesTable = ({
     }
   };
 
+  if (suggest && suggest?.hasSuggestedMedicine)
+    return (
+      <Link
+        style={{ textDecoration: "underline" }}
+        to={`/search-by?searchFor=${searchFor}&dosageForm=${suggest?.dosageForm}&findBy=${suggest.findBy}`}
+      >
+        <Text>
+          {searchFor} is available as {suggest?.dosageForm}
+        </Text>
+      </Link>
+    );
   return (
     <Box>
       <TableContainer
@@ -151,7 +166,11 @@ const MedicinesTable = ({
             No Medicine Found!
           </Text>
         ) : (
-          <Table variant="striped" className="sticky-header">
+          <Table
+            colorScheme={COLOR_SCHEME}
+            variant="striped"
+            className="sticky-header"
+          >
             <Thead>
               <Tr>
                 {headers.map((header) => (

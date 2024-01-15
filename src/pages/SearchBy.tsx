@@ -13,6 +13,7 @@ const SearchBy = () => {
     searchFor,
     medicines,
     milligramsList: searchMilligramsList,
+    suggest,
     loadMedicines,
   } = useMedicineStore((store) => store);
   const { data: allMedicines, isLoading: isAllMedicineLoading } = useQuery({
@@ -23,7 +24,7 @@ const SearchBy = () => {
 
   useEffect(() => {
     return () => {
-      loadMedicines([], "", []);
+      loadMedicines([], "", [], undefined);
     };
   }, [loadMedicines]);
 
@@ -53,6 +54,7 @@ const SearchBy = () => {
       pagination={!searchFor ? allMedicines?.pagination : undefined}
       onNext={handleNextPage}
       onPrev={handlePrev}
+      suggest={suggest}
     />
   );
 };

@@ -8,12 +8,13 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { searchByCriteria } from "../services";
 import { useMedicineStore } from "../store/medicine";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useLoader } from "../store/app";
+import { COLOR_SCHEME } from "../constants/theme";
 
 const searches = [
   {
@@ -37,20 +38,29 @@ const SearchBy = () => {
   const loadMedicines = useMedicineStore((store) => store.loadMedicines);
   const setLoading = useLoader((store) => store.setLoading);
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const query = useMemo(() => new URLSearchParams(search), [search]);
 
-  const findMedicine = async () => {
-    try {
-      setLoading(true);
-      navigate("/search-by");
-      const response = await searchByCriteria(findBy, searchText, dosageForm);
-      loadMedicines(response.data, response.search, response.milligramsList);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  const findMedicine = useCallback(
+    async (findBy: string, searchText: string, dosageForm: string) => {
+      try {
+        setLoading(true);
+        navigate("/search-by");
+        const response = await searchByCriteria(findBy, searchText, dosageForm);
+        loadMedicines(
+          response.data,
+          response.search,
+          response.milligramsList,
+          response.suggest
+        );
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [loadMedicines, navigate, setLoading]
+  );
   const handleSelectDosageForm = (value: string) => {
     if (value === "none") {
       setFindBy("");
@@ -60,6 +70,16 @@ const SearchBy = () => {
     }
     setDosageForm(value);
   };
+  useEffect(() => {
+    if (query.size > 0) {
+      const findBy = query.get("findBy");
+      const searchFor = query.get("searchFor");
+      const dosageForm = query.get("dosageForm");
+      if (findBy && searchFor && dosageForm) {
+        findMedicine(findBy, searchFor, dosageForm);
+      }
+    }
+  }, [findMedicine, query]);
   return (
     <Card height={140}>
       <CardHeader py={2}>
@@ -99,8 +119,9 @@ const SearchBy = () => {
             <option value="tablet">Tablet</option>
           </Select>
           <IconButton
-            onClick={findMedicine}
+            onClick={() => findMedicine(findBy, searchText, dosageForm)}
             aria-label="Search"
+            colorScheme={COLOR_SCHEME}
             isDisabled={!findBy || !searchText || !dosageForm}
             icon={<SearchIcon />}
           />

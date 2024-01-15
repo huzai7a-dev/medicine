@@ -13,6 +13,7 @@ import { searchPrescription } from "../services";
 import { useNavigate } from "react-router-dom";
 import { useMedicineGroups } from "../store/medicine";
 import { useLoader } from "../store/app";
+import { COLOR_SCHEME } from "../constants/theme";
 
 interface InputField {
   id: number;
@@ -120,7 +121,7 @@ const InputPrescription = () => {
       </CardBody>
       <Box display={"flex"} gap={5} position={"sticky"} px={3} width={"full"}>
         <Button
-          colorScheme="cyan"
+          colorScheme={COLOR_SCHEME}
           color={"white"}
           width={"full"}
           onClick={addInput}
@@ -128,7 +129,7 @@ const InputPrescription = () => {
           Add
         </Button>
         <Button
-          colorScheme="cyan"
+          colorScheme={COLOR_SCHEME}
           color={"white"}
           width={"full"}
           isDisabled={inputsEmpty}

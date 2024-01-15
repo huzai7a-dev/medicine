@@ -23,3 +23,9 @@ export interface PaginatedMedicines {
   pagination: PaginationData;
   milligramsList: string[];
 }
+
+export interface MedicineSuggest {
+  hasSuggestedMedicine: boolean;
+  dosageForm: string;
+  findBy: string;
+}

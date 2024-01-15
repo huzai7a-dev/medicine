@@ -10,6 +10,7 @@ import {
   MenuList,
   MenuItem,
   Divider,
+  Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
@@ -18,6 +19,7 @@ import Logo from "../assets/icons/logo.png";
 import { useAuthStore } from "../store/auth";
 import { AiOutlineUser } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { COLOR_SCHEME } from "../constants/theme";
 
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -43,7 +45,12 @@ const Header = () => {
           to="/"
           _hover={{ textDecoration: "none" }}
         >
-          <Button fontWeight={"medium"} variant={"ghost"}>
+          <Button
+            color={`${COLOR_SCHEME}.400`}
+            fontWeight={"medium"}
+            fontFamily={"heading"}
+            variant={"ghost"}
+          >
             Home
           </Button>
         </ChakraLink>
@@ -52,8 +59,13 @@ const Header = () => {
           to="/search-by"
           _hover={{ textDecoration: "none" }}
         >
-          <Button fontWeight={"medium"} variant={"ghost"}>
-            Search By
+          <Button
+            color={`${COLOR_SCHEME}.400`}
+            fontWeight={"medium"}
+            fontFamily={"heading"}
+            variant={"ghost"}
+          >
+            Search by
           </Button>
         </ChakraLink>
         <ChakraLink
@@ -61,7 +73,12 @@ const Header = () => {
           to="/search-prescription"
           _hover={{ textDecoration: "none" }}
         >
-          <Button fontWeight={"medium"} variant={"ghost"}>
+          <Button
+            color={`${COLOR_SCHEME}.400`}
+            fontWeight={"medium"}
+            fontFamily={"heading"}
+            variant={"ghost"}
+          >
             Prescription
           </Button>
         </ChakraLink>
@@ -71,43 +88,60 @@ const Header = () => {
             to="/pharmacist"
             _hover={{ textDecoration: "none" }}
           >
-            <Button fontWeight={"medium"} variant={"ghost"}>
+            <Button
+              color={`${COLOR_SCHEME}.400`}
+              fontWeight={"medium"}
+              fontFamily={"heading"}
+              variant={"ghost"}
+            >
               Pharmacist
             </Button>
           </ChakraLink>
         )}
       </Box>
       {authToken ? (
-        <div style={{zIndex : 3}}>
-        <Menu>
-        <MenuButton
-            textTransform={"uppercase"}
-            as={Button}
-            rightIcon={
-              <Avatar
-                bg="red.500"
-                size={"sm"}
-                icon={<AiOutlineUser fontSize="1rem" />}
-              />
-            }
-          >
-            {authUser?.type}
-          </MenuButton>
-          <MenuList>
-            <MenuItem>{authUser?.username}</MenuItem>
-            {authUser?.address && <MenuItem>{authUser.address}</MenuItem>}
-            {authUser?.details && <MenuItem>{authUser?.details}</MenuItem>}
-            <Divider />
-            <MenuItem as={Button} onClick={handleLogout}>
-              Logout
-            </MenuItem>
-          </MenuList>
-        </Menu>
-           </div>
+        <div style={{ zIndex: 3 }}>
+          <Menu>
+            <MenuButton
+              textTransform={"uppercase"}
+              as={Button}
+              paddingY={6}
+              bgColor={`${COLOR_SCHEME}.50`}
+              color={`${COLOR_SCHEME}.400`}
+              leftIcon={
+                <Avatar
+                  bg={`${COLOR_SCHEME}.500`}
+                  size={"sm"}
+                  icon={<AiOutlineUser fontSize="1rem" />}
+                />
+              }
+            >
+              {authUser?.type}
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <Text as={"b"}>Username:</Text> {authUser?.username}
+              </MenuItem>
+              {authUser?.address && (
+                <MenuItem>
+                  <Text as={"b"}>Address:</Text> {authUser.address}
+                </MenuItem>
+              )}
+              {authUser?.details && (
+                <MenuItem>
+                  <Text as={"b"}>Details:</Text> {authUser?.details}
+                </MenuItem>
+              )}
+              <Divider />
+              <MenuItem as={Button} onClick={handleLogout}>
+                Logout
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </div>
       ) : (
-
         <Button
-          colorScheme="cyan"
+          colorScheme={COLOR_SCHEME}
           display={"flex"}
           color={"white"}
           onClick={() => setShowLogin(true)}

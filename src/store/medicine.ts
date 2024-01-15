@@ -1,14 +1,17 @@
 import { create } from "zustand";
-import { Medicine } from "../interfaces/medicine";
+import { Medicine, MedicineSuggest } from "../interfaces/medicine";
 
 interface MedicineState {
   medicines: Medicine[] | [];
   searchFor: string;
   milligramsList: string[];
+  suggest?: MedicineSuggest;
+
   loadMedicines: (
     medicines: Medicine[],
     searchFor: string,
-    milligramsList: string[]
+    milligramsList: string[],
+    suggest: MedicineState["suggest"] | undefined
   ) => void;
 }
 
@@ -25,11 +28,13 @@ const useMedicineStore = create<MedicineState>()((set) => ({
   medicines: [],
   searchFor: "",
   milligramsList: [],
+  suggest: undefined,
   loadMedicines: (
     medicines: Medicine[],
     searchFor: string,
-    milligramsList: string[]
-  ) => set(() => ({ medicines, searchFor, milligramsList })),
+    milligramsList: string[],
+    suggest: MedicineState["suggest"]
+  ) => set(() => ({ medicines, searchFor, milligramsList, suggest })),
 }));
 
 const useMedicineGroups = create<MedicineGroup>()((set) => ({
