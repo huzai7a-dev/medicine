@@ -26,9 +26,16 @@ const SearchPrescription = () => {
     );
   return (
     <>
-      {groups.map(({ brands: medicines, brandName: searchFor }) => (
-        <MedicinesTable medicines={medicines} searchFor={searchFor} />
-      ))}
+      {groups.map(
+        ({ brands: medicines, brandName: searchFor, suggestedResult }) => (
+          <MedicinesTable
+            tableType="prescription"
+            medicines={medicines}
+            searchFor={searchFor}
+            suggestedPrescription={suggestedResult}
+          />
+        )
+      )}
     </>
   );
 };

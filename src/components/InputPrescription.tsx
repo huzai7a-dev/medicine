@@ -8,9 +8,9 @@ import {
   Input,
   Select,
 } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { searchPrescription } from "../services";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMedicineGroups } from "../store/medicine";
 import { useLoader } from "../store/app";
 import { COLOR_SCHEME } from "../constants/theme";
@@ -18,6 +18,11 @@ import { COLOR_SCHEME } from "../constants/theme";
 interface InputField {
   id: number;
   value: string;
+  dosageForm: string;
+}
+
+interface PrescriptionDTO {
+  brandName: string;
   dosageForm: string;
 }
 
@@ -35,6 +40,9 @@ function isArrayNonEmpty(arr: InputField[]) {
 }
 
 const InputPrescription = () => {
+  const { search } = useLocation();
+  const query = useMemo(() => new URLSearchParams(search), [search]);
+
   const [inputs, setInputs] = useState<InputField[]>([
     { id: 1, value: "", dosageForm: "none" },
   ]);
@@ -43,18 +51,46 @@ const InputPrescription = () => {
   const inputsEmpty = useMemo(() => !isArrayNonEmpty(inputs), [inputs]);
   const navigate = useNavigate();
 
-  const handleSearch = async () => {
-    try {
-      setLoading(true);
-      navigate("/search-prescription");
-      const data = await searchPrescription(getInputValues());
-      loadGroups(data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+  const handleSearch = useCallback(
+    async (prescriptionDTO: PrescriptionDTO[]) => {
+      try {
+        setLoading(true);
+        navigate("/search-prescription");
+        const data = await searchPrescription(prescriptionDTO);
+        loadGroups(data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [loadGroups, navigate, setLoading]
+  );
+
+  const getInputValues = useCallback(
+    (values: typeof inputs): PrescriptionDTO[] => {
+      return values.map((input) => ({
+        brandName: input.value,
+        dosageForm: input.dosageForm,
+      }));
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (query.size > 0) {
+      const brand = query.get("brand");
+      const dosageForm = query.get("dosageForm");
+      const index = inputs.findIndex(
+        (input) => input.value.toLowerCase() === brand?.toLowerCase()
+      );
+      const updatedInput = inputs;
+      updatedInput[index].dosageForm = dosageForm || "";
+      updatedInput[index].value = brand || "";
+      setInputs(updatedInput);
+      handleSearch(getInputValues(updatedInput));
     }
-  };
+  }, [getInputValues, handleSearch, inputs, query]);
 
   const handleInputChange = (id: number, newValue: string) => {
     setInputs((inputs) =>
@@ -71,13 +107,6 @@ const InputPrescription = () => {
 
   const removeInput = (id: number) => {
     setInputs((inputs) => inputs.filter((input) => input.id !== id));
-  };
-
-  const getInputValues = (): { brandName: string; dosageForm: string }[] => {
-    return inputs.map((input) => ({
-      brandName: input.value,
-      dosageForm: input.dosageForm,
-    }));
   };
 
   const handleDosageForm = (value: string, id: number) => {
@@ -133,7 +162,7 @@ const InputPrescription = () => {
           color={"white"}
           width={"full"}
           isDisabled={inputsEmpty}
-          onClick={handleSearch}
+          onClick={() => handleSearch(getInputValues(inputs))}
         >
           Search
         </Button>

@@ -15,9 +15,13 @@ interface MedicineState {
   ) => void;
 }
 
-interface Group {
+export interface Group {
   brandName: string;
   brands: Medicine[];
+  suggestedResult?: {
+    brand: string;
+    dosageForm: string;
+  };
 }
 interface MedicineGroup {
   groups: Group[] | [];

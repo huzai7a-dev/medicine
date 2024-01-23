@@ -16,15 +16,19 @@ import {
 } from "@chakra-ui/react";
 import { Medicine, MedicineSuggest } from "../interfaces/medicine";
 import { PaginationData } from "../interfaces/common";
-import { Link } from "react-router-dom";
 import { COLOR_SCHEME } from "../constants/theme";
+import SearchBySuggest from "./SearchBySuggest";
+import { Group } from "../store/medicine";
+import PrescriptionSuggestion from "./PrescriptionSuggestion";
 
 interface Props {
+  tableType: "searchBy" | "prescription";
   medicines: Medicine[];
   searchFor: string;
   milligramsList?: string[];
   pagination?: PaginationData;
   suggest?: MedicineSuggest;
+  suggestedPrescription?: Group["suggestedResult"];
   onNext?: () => void;
   onPrev?: () => void;
 }
@@ -42,11 +46,13 @@ const headers = [
 ];
 
 const MedicinesTable = ({
+  tableType,
   medicines,
   searchFor,
   pagination,
   milligramsList,
   suggest,
+  suggestedPrescription,
   onNext,
   onPrev,
 }: Props) => {
@@ -119,17 +125,20 @@ const MedicinesTable = ({
     }
   };
 
-  if (suggest && suggest?.hasSuggestedMedicine)
+  if (tableType === "searchBy" && suggest && suggest?.hasSuggestedMedicine)
     return (
-      <Link
-        style={{ textDecoration: "underline" }}
-        to={`/search-by?searchFor=${searchFor}&dosageForm=${suggest?.dosageForm}&findBy=${suggest.findBy}`}
-      >
-        <Text>
-          {searchFor} is available as {suggest?.dosageForm}
-        </Text>
-      </Link>
+      <SearchBySuggest
+        dosageForm={suggest.dosageForm}
+        findBy={suggest.findBy}
+        searchFor={searchFor}
+      />
     );
+
+  if (tableType === "prescription" && suggestedPrescription)
+    return (
+      <PrescriptionSuggestion suggestedPrescription={suggestedPrescription} />
+    );
+
   return (
     <Box>
       <TableContainer

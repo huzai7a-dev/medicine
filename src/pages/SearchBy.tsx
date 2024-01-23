@@ -48,6 +48,7 @@ const SearchBy = () => {
 
   return (
     <MedicinesTable
+      tableType="searchBy"
       milligramsList={renderMilligramsList}
       medicines={renderMedicines}
       searchFor={searchFor}
