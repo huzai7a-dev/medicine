@@ -18,6 +18,7 @@ interface MedicineState {
 export interface Group {
   brandName: string;
   brands: Medicine[];
+  milligramsList: string[]
   suggestedResult?: {
     brand: string;
     dosageForm: string;
@@ -44,6 +45,7 @@ const useMedicineStore = create<MedicineState>()((set) => ({
 const useMedicineGroups = create<MedicineGroup>()((set) => ({
   groups: [],
   loadGroups: (groups: Group[]) => set(() => ({ groups })),
+  milligramsList:[]
 }));
 
 export { useMedicineStore, useMedicineGroups };

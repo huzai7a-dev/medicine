@@ -27,12 +27,13 @@ const SearchPrescription = () => {
   return (
     <>
       {groups.map(
-        ({ brands: medicines, brandName: searchFor, suggestedResult }) => (
+        ({ brands: medicines, brandName: searchFor, suggestedResult,milligramsList }) => (
           <MedicinesTable
             tableType="prescription"
             medicines={medicines}
             searchFor={searchFor}
             suggestedPrescription={suggestedResult}
+            milligramsList={milligramsList}
           />
         )
       )}

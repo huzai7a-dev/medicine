@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -9,6 +9,7 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
+  Select,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
@@ -54,6 +55,9 @@ const UpdateMedicine = ({ isOpen, onClose, data }: Props) => {
     }));
   };
 
+  useEffect(()=> {
+    setFormData(data);
+  },[data])
   const { mutate: update } = useMutation({
     mutationKey: ["update"],
     mutationFn: updateMed,
@@ -101,19 +105,29 @@ const UpdateMedicine = ({ isOpen, onClose, data }: Props) => {
                   <FormLabel>
                     {capitalizeFirstLetter(key.replace(/_/g, " "))}
                   </FormLabel>
-                  <Input
-                    value={
-                      editableInputs.includes(key)
-                        ? formData[key as keyof Medicine] ?? ""
-                        : data[key as keyof Medicine] || ""
-                    }
-                    type="text"
-                    readOnly={!editableInputs.includes(key)}
-                    isDisabled={!editableInputs.includes(key)}
-                    onChange={(e) =>
-                      handleInputChange(key as keyof Medicine, e.target.value)
-                    }
-                  />
+                  {
+                    key === "is_public" ? (
+                      <Select onChange={(e)=> handleInputChange('is_public', e.target.value === "true" ? true : false)} value={formData.is_public ? "true" : "false"} placeholder='Select option'>
+                        <option value='false'>False</option>
+                        <option value='true'>True</option>
+                      </Select>
+                    ) :
+                      (
+                        <Input
+                          value={
+                            editableInputs.includes(key)
+                              ? formData[key as keyof Medicine] ?? ""
+                              : data[key as keyof Medicine] || ""
+                          }
+                          type="text"
+                          readOnly={!editableInputs.includes(key)}
+                          isDisabled={!editableInputs.includes(key)}
+                          onChange={(e) =>
+                            handleInputChange(key as keyof Medicine, e.target.value)
+                          }
+                        />
+                      )
+                  }
                 </Box>
               ))}
               <Button

@@ -58,6 +58,7 @@ const MedicinesTable = ({
 }: Props) => {
   const [list, setList] = useState(medicines);
   const [sortOrder, setSortOrder] = useState("ascending");
+  const [sortByMG,setSortByMG] = useState(false);
   const [sortFormula, setSorFormula] = useState(false);
   const [selectedMilligramFilter, setSelectedMilligramFilter] =
     useState("none");
@@ -80,6 +81,7 @@ const MedicinesTable = ({
     setList([...sortedList]);
   };
 
+
   useEffect(() => {
     setList(medicines);
   }, [medicines]);
@@ -99,6 +101,16 @@ const MedicinesTable = ({
     });
     setList(sortedList);
   }, [list, sortFormula]);
+
+  useEffect(()=> {
+    let sortedList = list;
+    sortedList = list.sort((a,b)=> {
+      const firstNum = Number(a?.efficacy?.split("%")[0]) || 0;
+      const secondNum = Number(b.efficacy?.split("%")[0]) || 0;
+      return sortByMG ? secondNum - firstNum : firstNum - secondNum
+    });
+    setList(sortedList);
+  },[list, sortByMG]);
 
   const RenderHeader = ({ header }: { header: string }) => {
     if (header === "Price") {
@@ -120,7 +132,17 @@ const MedicinesTable = ({
           </button>
         </>
       );
-    } else {
+    }if(header === "Efficacy"){
+      return (
+        <>
+          {header}
+          <button onClick={()=> setSortByMG(!sortByMG)}>
+          {sortByMG ? "▼" : "▲"}
+          </button>
+        </>
+      )
+    } 
+    else {
       return header;
     }
   };
